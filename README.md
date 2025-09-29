@@ -1,7 +1,7 @@
 # medicare-ELT-analytics
 An end-to-end data pipeline built with Airbyte and dbt Cloud to transform and analyze Medicare inpatient and outpatient charge data. Loaded into Snowflake and visualized with Power BI.
 
-![Architecture](./medicare-ELT-analytics/docs/ELT_architecture.png)
+![Architecture](/root/projects/portfolio_projects/data_engineering/medicare-ELT-analytics/docs/ELT_architecture.png)
 
 # The Data Ingestion Story: From Multiple Sources to Snowflake Raw
 
