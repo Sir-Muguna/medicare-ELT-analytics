@@ -1,7 +1,7 @@
 # medicare-ELT-analytics
 An end-to-end data pipeline built with Airbyte and dbt Cloud to transform and analyze Medicare inpatient and outpatient charge data. Loaded into Snowflake and visualized with Power BI.
 
-![Architecture](/root/projects/portfolio_projects/data_engineering/medicare-ELT-analytics/docs/ELT_architecture.png)
+![Architecture](docs/ELT_architecture.png)
 
 # The Data Ingestion Story: From Multiple Sources to Snowflake Raw
 
@@ -33,7 +33,7 @@ The breakthrough came when I used Airbyte's **User Schema** feature. I defined t
 
 Finally, I connected to the **Medicare API** for live healthcare data. The HTTP connector in Airbyte made this surprisingly simple—just the API endpoint and authentication details. I set it to incremental sync mode, ensuring only new data would transfer each month.
 
-![Source](./medicare-ELT-analytics/docs/sources_airbyte.png)
+![Source](docs/sources_airbyte.png)
 
 ## The Grand Finale: Unified Raw Data
 
@@ -46,7 +46,7 @@ Within hours, I had built a robust pipeline ingesting from four disparate source
 
 All landing neatly in structured tables, ready for the next transformation phase with dbt. The raw healthcare data ecosystem was alive!
 
-![Source](./medicare-ELT-analytics/docs/snowflake_db_raw.png)
+![Snowflake](docs/snowflake_db_raw.png)
 
 ---
 *Next Chapter: Transforming raw data into analytics-ready models with dbt Cloud...*
