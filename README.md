@@ -1,8 +1,12 @@
 # The Data Ingestion Story: From Multiple Sources to Snowflake Raw
 
+![Architecture](/docs/ELT_architecture.png)
+
 ## Chapter 1: Laying the Foundation
 
 I started by building my data warehouse foundation in **Snowflake**. I created dedicated entities—`HEALTHCARE_RAW_DB` database, `RAW` schema, and `AIRBYTE_HEALTHCARE` role—to ensure clean separation and cost tracking for ingestion.
+
+![Sources](/docs/sources_airbyte.png)
 
 ## Chapter 2: The First Connection - Google Sheets
 
@@ -36,6 +40,8 @@ Within hours, I had built a robust pipeline ingesting from four disparate source
 - ✅ **PostgreSQL (via Ngrok)** → Historical outpatient data  
 - ✅ **Google Drive JSON** → Inpatient records
 - ✅ **Medicare API** → Physician prescribing patterns, drug costs & geographic data for 2013
+
+![Snowflake](/docs/snowflake_db_raw.png)
 
 All landing neatly in structured tables, ready for the next transformation phase with dbt. The raw healthcare data ecosystem was alive!
 
