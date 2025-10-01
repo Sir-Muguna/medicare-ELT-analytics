@@ -29,9 +29,9 @@ The most challenging part was the **JSON files** in Google Drive—`inpatient_20
 
 The breakthrough came when I used Airbyte's **User Schema** feature. I defined the structure upfront, telling Airbyte how to interpret each field. The JSONL format transformed those nested arrays into clean, typed columns in `_AIRBYTE_RAW_GDRIVE_INPATIENT`.
 
-## Chapter 5: The Real-Time API Connection
+## Chapter 5: The Rest API Connection
 
-Finally, I connected to the **Medicare API** for live healthcare data. The HTTP connector in Airbyte made this surprisingly simple—just the API endpoint and authentication details. I set it to incremental sync mode, ensuring only new data would transfer each month.
+Finally, I connected to the **Medicare API** which enables analysis of physician prescribing behavior, drug cost patterns, and geographic variations in Medicare Part D coverage for 2013. The HTTP connector in Airbyte made this surprisingly simple—just the API endpoint and authentication details. I set it to incremental sync mode, ensuring only new data would transfer each month.
 
 ![Source](docs/sources_airbyte.png)
 
