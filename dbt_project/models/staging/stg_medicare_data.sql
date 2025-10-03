@@ -5,14 +5,14 @@
     )
 }}
 
-with raw_data as (
+with raw_medicare_data as (
     select
         -- Airbyte system columns (kept for audit)
         _airbyte_raw_id,
         _airbyte_extracted_at,
         
         -- Drug identification
-        md5(trim(brnd_name) || '|' || trim(gnrc_name)) as drug_key,
+        md5(trim(brnd_name) || '|' || trim(gnrc_name)) as drug_id,
         trim(brnd_name) as brnd_name,
         trim(gnrc_name) as gnrc_name,
         
@@ -119,4 +119,4 @@ with raw_data as (
     from {{ source('raw', 'medicare_data') }}
 )
 
-select * from raw_data
+select * from raw_medicare_data
