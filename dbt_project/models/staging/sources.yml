@@ -1,4 +1,3 @@
-# models/staging/sources.yml
 version: 2
 
 sources:
@@ -8,6 +7,10 @@ sources:
     tables:
       - name: medicare_data
         description: "Raw Medicare Part D prescription drug data from API"
+        loaded_at_field: _airbyte_extracted_at   # ✅ dbt will check this column
+        freshness:
+          warn_after: {count: 12, period: hour}   # warn if data is older than 12h
+          error_after: {count: 24, period: hour}  # fail if older than 24h
         columns:
           - name: _airbyte_raw_id
             description: "Airbyte unique record identifier"
