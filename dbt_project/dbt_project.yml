@@ -19,3 +19,4 @@ models:
     +materialized: view
     staging:
       +materialized: view
+      +schema: STAGING   # ✅ Force schema to STAGING
