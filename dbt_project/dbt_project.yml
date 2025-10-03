@@ -17,3 +17,4 @@ clean-targets: ["target", "dbt_packages"]
 models:
   staging:
     +materialized: view
+    +schema: staging
