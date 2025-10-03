@@ -1,8 +1,7 @@
 -- models/staging/stg_medicare_data.sql
 {{
     config(
-        materialized='view',
-        schema='staging'
+        materialized='view'
     )
 }}
 
