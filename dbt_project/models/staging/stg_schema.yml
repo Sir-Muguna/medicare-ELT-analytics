@@ -11,7 +11,7 @@ models:
       - name: _airbyte_extracted_at
         description: "Data extraction timestamp (from source)"
         
-      - name: drug_key
+      - name: drug_id
         description: "MD5 hash of brand and generic name for unique drug identification"
         tests:
           - not_null
