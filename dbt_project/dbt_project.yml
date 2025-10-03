@@ -15,7 +15,5 @@ target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 
 models:
-  healthcare_analytics:
+  staging:
     +materialized: view
-    staging:
-      +materialized: view
