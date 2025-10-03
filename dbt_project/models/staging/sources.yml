@@ -1,0 +1,57 @@
+# models/staging/sources.yml
+version: 2
+
+sources:
+  - name: raw
+    database: healthcare_project
+    schema: raw
+    tables:
+      - name: medicare_data
+        description: "Raw Medicare Part D prescription drug data from API"
+        columns:
+          - name: _airbyte_raw_id
+            description: "Airbyte unique record identifier"
+          - name: _airbyte_extracted_at
+            description: "Data extraction timestamp"
+          - name: brnd_name
+            description: "Brand name of the prescribed drug"
+          - name: gnrc_name
+            description: "Generic name of the prescribed drug"
+          - name: tot_clms
+            description: "Total number of claims submitted"
+          - name: tot_benes
+            description: "Total number of medicare beneficiaries"
+          - name: tot_drug_cst
+            description: "Total cost of the drug claims"
+          - name: tot_prscrbrs
+            description: "Total number of prescribing physicians"
+          - name: tot_30day_fills
+            description: "Total number of 30-day medication fills"
+          - name: ge65_tot_clms
+            description: "Total claims for beneficiaries aged 65+"
+          - name: ge65_tot_benes
+            description: "Total beneficiaries aged 65 and older"
+          - name: ge65_sprsn_flag
+            description: "Data suppression flag for 65+ population"
+          - name: prscrbr_geo_lvl
+            description: "Geographic level of the data aggregation"
+          - name: antbtc_drug_flag
+            description: "Indicates if drug is an antibiotic"
+          - name: lis_bene_cst_shr
+            description: "Low-income subsidy cost share amount"
+          - name: opioid_drug_flag
+            description: "Indicates if drug is an opioid"
+          - name: prscrbr_geo_desc
+            description: "Description of geographic level"
+          - name: ge65_tot_drug_cst
+            description: "Total drug cost for 65+ beneficiaries"
+          - name: antpsyct_drug_flag
+            description: "Indicates if drug is an antipsychotic"
+          - name: nonlis_bene_cst_shr
+            description: "Non-low-income subsidy cost share"
+          - name: opioid_la_drug_flag
+            description: "Indicates if drug is long-acting opioid"
+          - name: ge65_bene_sprsn_flag
+            description: "Beneficiary count suppression flag for 65+"
+          - name: ge65_tot_30day_fills
+            description: "30-day fills for 65+ beneficiaries"

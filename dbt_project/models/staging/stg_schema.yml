@@ -1,0 +1,85 @@
+# models/staging/stg_schema.yml
+version: 2
+
+models:
+  - name: stg_medicare_data
+    description: "Cleaned and standardized Medicare Part D prescription drug data"
+    columns:
+      - name: _airbyte_raw_id
+        description: "Airbyte unique record identifier (from source)"
+        
+      - name: _airbyte_extracted_at
+        description: "Data extraction timestamp (from source)"
+        
+      - name: drug_key
+        description: "MD5 hash of brand and generic name for unique drug identification"
+        tests:
+          - not_null
+          - unique
+          
+      - name: brnd_name
+        description: "Cleaned brand name of the prescribed drug"
+        tests:
+          - not_null
+          
+      - name: gnrc_name
+        description: "Cleaned generic name of the prescribed drug"
+        tests:
+          - not_null
+          
+      - name: tot_clms
+        description: "Total number of claims submitted (converted to integer)"
+        
+      - name: tot_benes
+        description: "Total number of medicare beneficiaries (converted to integer)"
+        
+      - name: tot_prscrbrs
+        description: "Total number of prescribing physicians (converted to integer)"
+        
+      - name: tot_30day_fills
+        description: "Total number of 30-day medication fills (converted to float)"
+        
+      - name: tot_drug_cst
+        description: "Total cost of the drug claims (converted to float)"
+        
+      - name: lis_bene_cst_shr
+        description: "Low-income subsidy cost share amount (converted to float)"
+        
+      - name: nonlis_bene_cst_shr
+        description: "Non-low-income subsidy cost share (converted to float)"
+        
+      - name: ge65_tot_clms
+        description: "Total claims for beneficiaries aged 65+ (converted to integer)"
+        
+      - name: ge65_tot_benes
+        description: "Total beneficiaries aged 65 and older (converted to integer)"
+        
+      - name: ge65_tot_30day_fills
+        description: "30-day fills for 65+ beneficiaries (converted to float)"
+        
+      - name: ge65_tot_drug_cst
+        description: "Total drug cost for 65+ beneficiaries (converted to float)"
+        
+      - name: is_antibiotic_drug
+        description: "Boolean flag indicating if drug is an antibiotic"
+        
+      - name: is_opioid_drug
+        description: "Boolean flag indicating if drug is an opioid"
+        
+      - name: is_long_acting_opioid
+        description: "Boolean flag indicating if drug is a long-acting opioid"
+        
+      - name: is_antipsychotic_drug
+        description: "Boolean flag indicating if drug is an antipsychotic"
+        
+      - name: is_ge65_suppressed
+        description: "Boolean flag indicating if 65+ data is suppressed"
+        
+      - name: is_ge65_beneficiary_suppressed
+        description: "Boolean flag indicating if 65+ beneficiary count is suppressed"
+        
+      - name: prescriber_geo_level
+        description: "Geographic level of the data aggregation (hardcoded as NATIONAL)"
+        
+      - name: prescriber_geo_description
+        description: "Description of geographic level (hardcoded as NATIONAL)"
