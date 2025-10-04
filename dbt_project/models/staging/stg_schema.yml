@@ -13,7 +13,6 @@ models:
         
       - name: drug_key
         description: "MD5 hash of brand and generic name for unique drug identification"
-        tests:
           
       - name: brnd_name
         description: "Cleaned brand name of the prescribed drug"
@@ -85,6 +84,12 @@ models:
   - name: stg_icd_11_codes
     description: "Cleaned and standardized ICD-11 disease classification codes"
     columns:
+      - name: _airbyte_raw_id
+        description: "Airbyte unique record identifier (from source)"
+        
+      - name: _airbyte_extracted_at
+        description: "Data extraction timestamp (from source)"
+        
       - name: icd_code
         description: "Standardized ICD-11 disease classification code"
         tests:
@@ -134,9 +139,3 @@ models:
         
       - name: linearization_uri
         description: "Linearization reference URI"
-        
-      - name: _airbyte_raw_id
-        description: "Airbyte unique record identifier (from source)"
-        
-      - name: _airbyte_extracted_at
-        description: "Data extraction timestamp (from source)"
