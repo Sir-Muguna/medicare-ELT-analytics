@@ -54,8 +54,7 @@ sources:
             description: "Beneficiary count suppression flag for 65+"
           - name: ge65_tot_30day_fills
             description: "30-day fills for 65+ beneficiaries"
-            
-# models/staging/sources.yml
+
       - name: icd_11
         description: "Raw ICD-11 disease classification codes from Google Drive"
         columns:
@@ -83,3 +82,75 @@ sources:
             description: "Linearization reference URI"
           - name: "PRIMARY TABULATION"
             description: "Primary tabulation flag"
+
+      - name: hospital_general_info
+        description: "Raw hospital general information and quality metrics from Google Sheets"
+        columns:
+          - name: PROVIDER_ID
+            description: "Unique hospital identifier"
+          - name: HOSPITAL_NAME
+            description: "Name of healthcare facility"
+          - name: ADDRESS
+            description: "Street address of hospital"
+          - name: CITY
+            description: "City where hospital is located"
+          - name: STATE
+            description: "State where hospital is located"
+          - name: ZIP_CODE
+            description: "Postal zip code"
+          - name: COUNTY_NAME
+            description: "County where hospital is located"
+          - name: PHONE_NUMBER
+            description: "Contact phone number"
+          - name: HOSPITAL_TYPE
+            description: "Type of hospital facility"
+          - name: HOSPITAL_OWNERSHIP
+            description: "Ownership type of hospital"
+          - name: EMERGENCY_SERVICES
+            description: "Emergency services availability"
+          - name: SAFETY_MEASURES_COUNT
+            description: "Total safety measures"
+          - name: HOSPITAL_OVERALL_RATING
+            description: "Overall quality rating (1-5)"
+          - name: READMISSION_MEASURES_COUNT
+            description: "Total readmission measures"
+          - name: SAFETY_MEASURES_WORSE_COUNT
+            description: "Safety measures performing worse"
+          - name: SAFETY_MEASURES_BETTER_COUNT
+            description: "Safety measures performing better"
+          - name: MORTALITY_GROUP_MEASURE_COUNT
+            description: "Total mortality measures"
+          - name: MORTALITY_MEASURES_WORSE_COUNT
+            description: "Mortality measures performing worse"
+          - name: MORTALITY_MEASURES_BETTER_COUNT
+            description: "Mortality measures performing better"
+          - name: HOSPITAL_OVERALL_RATING_FOOTNOTE
+            description: "Footnote for overall rating"
+          - name: READMISSION_MEASURES_WORSE_COUNT
+            description: "Readmission measures performing worse"
+          - name: PATIENT_EXPERIENCE_MEASURES_COUNT
+            description: "Patient experience measures"
+          - name: READMISSION_MEASURES_BETTER_COUNT
+            description: "Readmission measures performing better"
+          - name: FACILITY_MORTAILITY_MEASURES_COUNT
+            description: "Facility mortality measures"
+          - name: SAFETY_MEASURES_NO_DIFFERENT_COUNT
+            description: "Safety measures no difference"
+          - name: FACILITY_CARE_SAFETY_MEASURES_COUNT
+            description: "Facility safety care measures"
+          - name: FACILITY_READMISSION_MEASURES_COUNT
+            description: "Facility readmission measures"
+          - name: PATIENT_EXPERIENCE_MEASURES_FOOTNOTE
+            description: "Footnote for patient experience"
+          - name: MORTALITY_MEASURES_NO_DIFFERENT_COUNT
+            description: "Mortality measures no difference"
+          - name: READMISSION_MEASURES_NO_DIFFERENT_COUNT
+            description: "Readmission measures no difference"
+          - name: TIMELY_AND_EFFECTIVE_CARE_MEASURES_COUNT
+            description: "Timely care measures"
+          - name: FACILITY_PATIENT_EXPERIENCE_MEASURES_COUNT
+            description: "Facility patient experience measures"
+          - name: FACILITY_TIMELY_AND_EFFECTIVE_CARE_MEASURES_COUNT
+            description: "Facility timely care measures"
+          - name: MEETS_CRITERIA_FOR_PROMOTING_INTEROPERABILITY_OF_EHRS
+            description: "EHR interoperability compliance"
