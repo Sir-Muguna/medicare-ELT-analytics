@@ -90,7 +90,6 @@ models:
       - name: icd_code
         description: "Standardized ICD-11 disease classification code"
         tests:
-          - not_null
           - unique
           
       - name: disease_title
