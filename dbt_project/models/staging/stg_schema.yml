@@ -139,3 +139,118 @@ models:
         
       - name: linearization_uri
         description: "Linearization reference URI"
+
+  - name: stg_hospital_general_info  
+    description: "Cleaned and standardized hospital general information with quality metrics"
+    columns:
+      - name: provider_id
+        description: "Unique hospital identifier"
+        tests:
+          - not_null
+          - unique
+          
+      - name: hospital_name
+        description: "Name of healthcare facility"
+        tests:
+          - not_null
+          
+      - name: address
+        description: "Street address of hospital"
+        
+      - name: city
+        description: "City where hospital is located"
+        
+      - name: state
+        description: "State where hospital is located"
+        
+      - name: zip_code
+        description: "Postal zip code"
+        
+      - name: county_name
+        description: "County where hospital is located"
+        
+      - name: phone_number
+        description: "Contact phone number"
+        
+      - name: hospital_type
+        description: "Type of hospital facility"
+        
+      - name: hospital_ownership
+        description: "Ownership type of hospital"
+        
+      - name: has_emergency_services
+        description: "Boolean indicating if hospital has emergency services"
+        
+      - name: meets_ehr_interoperability_criteria
+        description: "Boolean indicating EHR interoperability compliance"
+        
+      - name: hospital_overall_rating
+        description: "Overall quality rating (1-5 scale)"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 5
+                
+      - name: safety_measures_count
+        description: "Total number of safety measures"
+        
+      - name: readmission_measures_count
+        description: "Total number of readmission measures"
+        
+      - name: safety_measures_worse_count
+        description: "Number of safety measures performing worse than average"
+        
+      - name: safety_measures_better_count
+        description: "Number of safety measures performing better than average"
+        
+      - name: mortality_group_measure_count
+        description: "Total number of mortality measures"
+        
+      - name: mortality_measures_worse_count
+        description: "Number of mortality measures performing worse than average"
+        
+      - name: mortality_measures_better_count
+        description: "Number of mortality measures performing better than average"
+        
+      - name: readmission_measures_worse_count
+        description: "Number of readmission measures performing worse than average"
+        
+      - name: patient_experience_measures_count
+        description: "Total number of patient experience measures"
+        
+      - name: readmission_measures_better_count
+        description: "Number of readmission measures performing better than average"
+        
+      - name: facility_mortality_measures_count
+        description: "Number of facility-specific mortality measures"
+        
+      - name: safety_measures_no_different_count
+        description: "Number of safety measures with no significant difference"
+        
+      - name: facility_care_safety_measures_count
+        description: "Number of facility care safety measures"
+        
+      - name: facility_readmission_measures_count
+        description: "Number of facility readmission measures"
+        
+      - name: mortality_measures_no_different_count
+        description: "Number of mortality measures with no significant difference"
+        
+      - name: readmission_measures_no_different_count
+        description: "Number of readmission measures with no significant difference"
+        
+      - name: timely_care_measures_count
+        description: "Total number of timely and effective care measures"
+        
+      - name: facility_patient_experience_measures_count
+        description: "Number of facility patient experience measures"
+        
+      - name: facility_timely_care_measures_count
+        description: "Number of facility timely and effective care measures"
+        
+      - name: hospital_overall_rating_footnote
+        description: "Footnote for overall rating"
+        
+      - name: patient_experience_measures_footnote
+        description: "Footnote for patient experience measures"
