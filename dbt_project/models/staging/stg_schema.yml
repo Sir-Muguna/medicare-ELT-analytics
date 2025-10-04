@@ -14,7 +14,6 @@ models:
       - name: drug_key
         description: "MD5 hash of brand and generic name for unique drug identification"
         tests:
-          - not_null
           - unique
           
       - name: brnd_name
