@@ -11,7 +11,7 @@ models:
       - name: _airbyte_extracted_at
         description: "Data extraction timestamp (from source)"
         
-      - name: drug_id
+      - name: drug_key
         description: "MD5 hash of brand and generic name for unique drug identification"
         tests:
           - not_null
@@ -83,3 +83,63 @@ models:
         
       - name: prescriber_geo_description
         description: "Description of geographic level (hardcoded as NATIONAL)"
+
+  - name: stg_icd_11_codes
+    description: "Cleaned and standardized ICD-11 disease classification codes"
+    columns:
+      - name: icd_code
+        description: "Standardized ICD-11 disease classification code"
+        tests:
+          - not_null
+          - unique
+          
+      - name: disease_title
+        description: "Cleaned disease description and title"
+        tests:
+          - not_null
+          
+      - name: is_leaf_node
+        description: "Boolean indicating if code is a leaf node in hierarchy"
+        
+      - name: chapter_number
+        description: "Chapter number for classification (1-26)"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 26
+              
+      - name: hierarchy_depth
+        description: "Depth level in classification hierarchy (1-8)"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 8
+              
+      - name: classification_kind
+        description: "Type of classification category"
+        
+      - name: primary_grouping
+        description: "Primary grouping category"
+        
+      - name: secondary_grouping
+        description: "Secondary grouping category"
+        
+      - name: is_residual_category
+        description: "Boolean indicating if this is a residual category"
+        
+      - name: is_primary_tabulation
+        description: "Boolean flag for primary tabulation"
+        
+      - name: foundation_ontology_uri
+        description: "Foundation ontology URI reference"
+        
+      - name: linearization_uri
+        description: "Linearization reference URI"
+        
+      - name: _airbyte_raw_id
+        description: "Airbyte unique record identifier (from source)"
+        
+      - name: _airbyte_extracted_at
+        description: "Data extraction timestamp (from source)"

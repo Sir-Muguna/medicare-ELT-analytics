@@ -54,3 +54,32 @@ sources:
             description: "Beneficiary count suppression flag for 65+"
           - name: ge65_tot_30day_fills
             description: "30-day fills for 65+ beneficiaries"
+            
+# models/staging/sources.yml
+      - name: icd_11
+        description: "Raw ICD-11 disease classification codes from Google Drive"
+        columns:
+          - name: CODE
+            description: "ICD-11 disease classification code"
+          - name: TITLE
+            description: "Disease description and title" 
+          - name: ISLEAF
+            description: "Indicates if code is a leaf node"
+          - name: CHAPTERNO
+            description: "Chapter number for classification"
+          - name: CLASSKIND
+            description: "Classification kind/category"
+          - name: GROUPING1
+            description: "Primary grouping category"
+          - name: GROUPING2
+            description: "Secondary grouping category"
+          - name: ISRESIDUAL
+            description: "Indicates residual category"
+          - name: DEPTHINKIND
+            description: "Hierarchy depth level"
+          - name: "FOUNDATION URI"
+            description: "Foundation ontology URI"
+          - name: "LINEARIZATION URI"
+            description: "Linearization reference URI"
+          - name: "PRIMARY TABULATION"
+            description: "Primary tabulation flag"
