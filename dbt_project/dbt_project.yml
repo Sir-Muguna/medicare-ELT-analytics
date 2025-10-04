@@ -18,4 +18,3 @@ models:
   medicare_elt_analytics: 
     staging:
       +materialized: view
-      +schema: staging
