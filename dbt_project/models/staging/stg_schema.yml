@@ -274,7 +274,7 @@ models:
         description: "Name of healthcare facility"
         tests:
           - not_null
-                  
+
       - name: provider_street_address
         description: "Street address of provider"
         
@@ -301,3 +301,50 @@ models:
         
       - name: _airbyte_extracted_at
         description: "Data extraction timestamp"
+
+# Add to models/staging/stg_schema.yml
+  - name: stg_inpatient_charges
+    description: "Cleaned and combined inpatient discharge data across 2011-2013"
+    columns:
+      - name: service_year
+        description: "Year of service data (2011, 2012, or 2013)"
+        
+      - name: provider_id
+        description: "Unique hospital/provider identifier"
+        tests:
+          - not_null
+
+      - name: provider_name
+        description: "Name of healthcare facility"
+        tests:
+          - not_null
+                  
+      - name: provider_street_address
+        description: "Street address of provider"
+        
+      - name: provider_city
+        description: "City where provider is located"
+        
+      - name: provider_state
+        description: "State where provider is located"
+        
+      - name: provider_zipcode
+        description: "Postal zip code as string"
+        
+      - name: hospital_referral_region
+        description: "Regional healthcare referral area description"
+        
+      - name: total_discharges
+        description: "Number of inpatient discharges"
+        
+      - name: average_covered_charges
+        description: "Average charges covered per discharge"
+        
+      - name: average_total_payments
+        description: "Average total payments per discharge"
+        
+      - name: average_medicare_payments
+        description: "Average Medicare payments per discharge"
+        
+      - name: icd_category
+        description: "International disease classification code"
