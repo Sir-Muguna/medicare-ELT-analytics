@@ -254,3 +254,50 @@ models:
         
       - name: patient_experience_measures_footnote
         description: "Footnote for patient experience measures"
+
+# Add to models/staging/stg_schema.yml
+  - name: stg_outpatient_charges
+    description: "Cleaned and combined outpatient service data across 2011-2013"
+    columns:
+      - name: service_year
+        description: "Year of service data (2011, 2012, or 2013)"
+        
+      - name: apc
+        description: "Ambulatory Payment Classification code and description"
+        
+      - name: provider_id
+        description: "Unique hospital/provider identifier"
+        tests:
+          - not_null
+
+      - name: provider_name
+        description: "Name of healthcare facility"
+        tests:
+          - not_null
+                  
+      - name: provider_street_address
+        description: "Street address of provider"
+        
+      - name: provider_city
+        description: "City where provider is located"
+        
+      - name: provider_state
+        description: "State where provider is located"
+        
+      - name: provider_zipcode
+        description: "Postal zip code as string"
+        
+      - name: outpatient_services_count
+        description: "Number of outpatient services provided"
+        
+      - name: average_total_payments
+        description: "Average payments received per service"
+        
+      - name: average_submitted_charges
+        description: "Average charges submitted per service"
+        
+      - name: _airbyte_raw_id
+        description: "Airbyte unique record identifier"
+        
+      - name: _airbyte_extracted_at
+        description: "Data extraction timestamp"
