@@ -105,7 +105,9 @@ Through rigorous Exploratory Data Analysis (EDA) using Snowflake worksheets, I e
 ---
 
 # The Staging Layer Triumph
+
 ![Snowflake_STG](/docs/snowflake_db_stg.png)
+
 I successfully transformed raw, disparate healthcare data into a unified staging layer.  
 The data journey evolved from:
 
