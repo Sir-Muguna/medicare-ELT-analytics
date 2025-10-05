@@ -154,3 +154,11 @@ sources:
             description: "Facility timely care measures"
           - name: MEETS_CRITERIA_FOR_PROMOTING_INTEROPERABILITY_OF_EHRS
             description: "EHR interoperability compliance"
+
+# Add to models/staging/sources.yml
+      - name: outpatient_charges_2011
+        description: "Outpatient charges and service data for 2011"
+      - name: outpatient_charges_2012  
+        description: "Outpatient charges and service data for 2012"
+      - name: outpatient_charges_2013
+        description: "Outpatient charges and service data for 2013"
