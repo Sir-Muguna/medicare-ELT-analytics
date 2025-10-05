@@ -1,8 +1,7 @@
 -- models/staging/stg_inpatient_charges.sql
 {{
     config(
-        materialized='view',
-        schema='staging'
+        materialized='view'
     )
 }}
 
