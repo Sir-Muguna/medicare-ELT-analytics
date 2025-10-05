@@ -1,0 +1,172 @@
+version: 2
+
+sources:
+  - name: staging
+    database: healthcare_project
+    schema: staging
+    tables:
+      - name: medicare_data
+        description: "Cleaned Medicare Part D prescription drug data from API"
+        columns:
+          - name: _airbyte_raw_id
+            description: "Airbyte unique record identifier"
+          - name: _airbyte_extracted_at
+            description: "Data extraction timestamp"
+          - name: brnd_name
+            description: "Brand name of the prescribed drug"
+          - name: gnrc_name
+            description: "Generic name of the prescribed drug"
+          - name: tot_clms
+            description: "Total number of claims submitted"
+          - name: tot_benes
+            description: "Total number of medicare beneficiaries"
+          - name: tot_drug_cst
+            description: "Total cost of the drug claims"
+          - name: tot_prscrbrs
+            description: "Total number of prescribing physicians"
+          - name: tot_30day_fills
+            description: "Total number of 30-day medication fills"
+          - name: ge65_tot_clms
+            description: "Total claims for beneficiaries aged 65+"
+          - name: ge65_tot_benes
+            description: "Total beneficiaries aged 65 and older"
+          - name: ge65_sprsn_flag
+            description: "Data suppression flag for 65+ population"
+          - name: prscrbr_geo_lvl
+            description: "Geographic level of the data aggregation"
+          - name: antbtc_drug_flag
+            description: "Indicates if drug is an antibiotic"
+          - name: lis_bene_cst_shr
+            description: "Low-income subsidy cost share amount"
+          - name: opioid_drug_flag
+            description: "Indicates if drug is an opioid"
+          - name: prscrbr_geo_desc
+            description: "Description of geographic level"
+          - name: ge65_tot_drug_cst
+            description: "Total drug cost for 65+ beneficiaries"
+          - name: antpsyct_drug_flag
+            description: "Indicates if drug is an antipsychotic"
+          - name: nonlis_bene_cst_shr
+            description: "Non-low-income subsidy cost share"
+          - name: opioid_la_drug_flag
+            description: "Indicates if drug is long-acting opioid"
+          - name: ge65_bene_sprsn_flag
+            description: "Beneficiary count suppression flag for 65+"
+          - name: ge65_tot_30day_fills
+            description: "30-day fills for 65+ beneficiaries"
+
+      - name: icd_11
+        description: "Raw ICD-11 disease classification codes from Google Drive"
+        columns:
+          - name: CODE
+            description: "ICD-11 disease classification code"
+          - name: TITLE
+            description: "Disease description and title" 
+          - name: ISLEAF
+            description: "Indicates if code is a leaf node"
+          - name: CHAPTERNO
+            description: "Chapter number for classification"
+          - name: CLASSKIND
+            description: "Classification kind/category"
+          - name: GROUPING1
+            description: "Primary grouping category"
+          - name: GROUPING2
+            description: "Secondary grouping category"
+          - name: ISRESIDUAL
+            description: "Indicates residual category"
+          - name: DEPTHINKIND
+            description: "Hierarchy depth level"
+          - name: "FOUNDATION URI"
+            description: "Foundation ontology URI"
+          - name: "LINEARIZATION URI"
+            description: "Linearization reference URI"
+          - name: "PRIMARY TABULATION"
+            description: "Primary tabulation flag"
+
+      - name: hospital_general_info
+        description: "Raw hospital general information and quality metrics from Google Sheets"
+        columns:
+          - name: PROVIDER_ID
+            description: "Unique hospital identifier"
+          - name: HOSPITAL_NAME
+            description: "Name of healthcare facility"
+          - name: ADDRESS
+            description: "Street address of hospital"
+          - name: CITY
+            description: "City where hospital is located"
+          - name: STATE
+            description: "State where hospital is located"
+          - name: ZIP_CODE
+            description: "Postal zip code"
+          - name: COUNTY_NAME
+            description: "County where hospital is located"
+          - name: PHONE_NUMBER
+            description: "Contact phone number"
+          - name: HOSPITAL_TYPE
+            description: "Type of hospital facility"
+          - name: HOSPITAL_OWNERSHIP
+            description: "Ownership type of hospital"
+          - name: EMERGENCY_SERVICES
+            description: "Emergency services availability"
+          - name: SAFETY_MEASURES_COUNT
+            description: "Total safety measures"
+          - name: HOSPITAL_OVERALL_RATING
+            description: "Overall quality rating (1-5)"
+          - name: READMISSION_MEASURES_COUNT
+            description: "Total readmission measures"
+          - name: SAFETY_MEASURES_WORSE_COUNT
+            description: "Safety measures performing worse"
+          - name: SAFETY_MEASURES_BETTER_COUNT
+            description: "Safety measures performing better"
+          - name: MORTALITY_GROUP_MEASURE_COUNT
+            description: "Total mortality measures"
+          - name: MORTALITY_MEASURES_WORSE_COUNT
+            description: "Mortality measures performing worse"
+          - name: MORTALITY_MEASURES_BETTER_COUNT
+            description: "Mortality measures performing better"
+          - name: HOSPITAL_OVERALL_RATING_FOOTNOTE
+            description: "Footnote for overall rating"
+          - name: READMISSION_MEASURES_WORSE_COUNT
+            description: "Readmission measures performing worse"
+          - name: PATIENT_EXPERIENCE_MEASURES_COUNT
+            description: "Patient experience measures"
+          - name: READMISSION_MEASURES_BETTER_COUNT
+            description: "Readmission measures performing better"
+          - name: FACILITY_MORTAILITY_MEASURES_COUNT
+            description: "Facility mortality measures"
+          - name: SAFETY_MEASURES_NO_DIFFERENT_COUNT
+            description: "Safety measures no difference"
+          - name: FACILITY_CARE_SAFETY_MEASURES_COUNT
+            description: "Facility safety care measures"
+          - name: FACILITY_READMISSION_MEASURES_COUNT
+            description: "Facility readmission measures"
+          - name: PATIENT_EXPERIENCE_MEASURES_FOOTNOTE
+            description: "Footnote for patient experience"
+          - name: MORTALITY_MEASURES_NO_DIFFERENT_COUNT
+            description: "Mortality measures no difference"
+          - name: READMISSION_MEASURES_NO_DIFFERENT_COUNT
+            description: "Readmission measures no difference"
+          - name: TIMELY_AND_EFFECTIVE_CARE_MEASURES_COUNT
+            description: "Timely care measures"
+          - name: FACILITY_PATIENT_EXPERIENCE_MEASURES_COUNT
+            description: "Facility patient experience measures"
+          - name: FACILITY_TIMELY_AND_EFFECTIVE_CARE_MEASURES_COUNT
+            description: "Facility timely care measures"
+          - name: MEETS_CRITERIA_FOR_PROMOTING_INTEROPERABILITY_OF_EHRS
+            description: "EHR interoperability compliance"
+
+# Add to models/staging/sources.yml
+      - name: outpatient_charges_2011
+        description: "Outpatient charges and service data for 2011"
+      - name: outpatient_charges_2012  
+        description: "Outpatient charges and service data for 2012"
+      - name: outpatient_charges_2013
+        description: "Outpatient charges and service data for 2013"
+
+# models/staging/sources.yml
+      - name: inpatient_2011
+        description: "Inpatient discharge and payment data for 2011"
+      - name: inpatient_2012  
+        description: "Inpatient discharge and payment data for 2012"
+      - name: inpatient_2013
+        description: "Inpatient discharge and payment data for 2013"
