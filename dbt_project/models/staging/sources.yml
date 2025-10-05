@@ -162,3 +162,11 @@ sources:
         description: "Outpatient charges and service data for 2012"
       - name: outpatient_charges_2013
         description: "Outpatient charges and service data for 2013"
+
+# models/staging/sources.yml
+      - name: inpatient_2011
+        description: "Inpatient discharge and payment data for 2011"
+      - name: inpatient_2012  
+        description: "Inpatient discharge and payment data for 2012"
+      - name: inpatient_2013
+        description: "Inpatient discharge and payment data for 2013"
