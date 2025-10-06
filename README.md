@@ -115,6 +115,6 @@ The foundation is now set for the most exciting phase: **building analytical mod
 
 ---
 
-## Next Chapter
+## Next Chapter...
 **Building the analytical mart layer — transforming clean data into business intelligence...**
 
