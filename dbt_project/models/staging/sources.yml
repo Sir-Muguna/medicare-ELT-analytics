@@ -155,7 +155,6 @@ sources:
           - name: MEETS_CRITERIA_FOR_PROMOTING_INTEROPERABILITY_OF_EHRS
             description: "EHR interoperability compliance"
 
-# Add to models/staging/sources.yml
       - name: outpatient_charges_2011
         description: "Outpatient charges and service data for 2011"
       - name: outpatient_charges_2012  
@@ -163,10 +162,25 @@ sources:
       - name: outpatient_charges_2013
         description: "Outpatient charges and service data for 2013"
 
-# models/staging/sources.yml
       - name: inpatient_2011
         description: "Inpatient discharge and payment data for 2011"
       - name: inpatient_2012  
         description: "Inpatient discharge and payment data for 2012"
       - name: inpatient_2013
         description: "Inpatient discharge and payment data for 2013"
+
+      - name: icd_10
+        description: "ICD-10 disease classification codes and descriptions"
+        columns:
+          - name: CHAPTER
+            description: "ICD-10 chapter roman numeral"
+          - name: CHAPTER_DESCRIPTION
+            description: "Description of medical chapter"
+          - name: CODE_CATEGORY
+            description: "Code category range"
+          - name: CODE_CATEGORY_DESCRIPTION
+            description: "Description of code category"
+          - name: ICD_CODE
+            description: "Individual disease code"
+          - name: DISEASE_DESCRIPTION
+            description: "Description of specific disease"

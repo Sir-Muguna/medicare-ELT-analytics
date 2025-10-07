@@ -255,7 +255,6 @@ models:
       - name: patient_experience_measures_footnote
         description: "Footnote for patient experience measures"
 
-# Add to models/staging/stg_schema.yml
   - name: stg_outpatient_charges
     description: "Cleaned and combined outpatient service data across 2011-2013"
     columns:
@@ -302,7 +301,6 @@ models:
       - name: _airbyte_extracted_at
         description: "Data extraction timestamp"
 
-# Add to models/staging/stg_schema.yml
   - name: stg_inpatient_charges
     description: "Cleaned and combined inpatient discharge data across 2011-2013"
     columns:
@@ -348,3 +346,30 @@ models:
         
       - name: icd_category
         description: "International disease classification code"
+
+  - name: stg_icd_10_codes
+    description: "Cleaned ICD-10 disease classification codes with proper NULL handling"
+    columns:
+      - name: chapter
+        description: "ICD-10 chapter roman numeral (I-XXII)"
+        
+      - name: chapter_description
+        description: "Description of medical chapter"
+        
+      - name: code_category
+        description: "Code category range (e.g., A00-A09)"
+        
+      - name: code_category_description
+        description: "Description of code category"
+        
+      - name: icd_code
+        description: "Individual disease code (e.g., A00)"
+        
+      - name: disease_description
+        description: "Description of specific disease"
+        
+      - name: _airbyte_raw_id
+        description: "Airbyte unique record identifier"
+        
+      - name: _airbyte_extracted_at
+        description: "Data extraction timestamp"
