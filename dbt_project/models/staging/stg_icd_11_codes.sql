@@ -18,10 +18,10 @@ with icd_11_raw_data as (
             else null 
         end as icd_code,
         
-        -- Remove '- - - ' prefix from disease titles and clean
+        -- Remove all dash prefix patterns from disease titles and clean
         case 
             when TITLE is not null and TITLE != '' 
-            then trim(replace(TITLE, '- - - ', ''))
+            then trim(regexp_replace(TITLE, '^[-\\s]+', ''))
             else null 
         end as disease_title,
         
