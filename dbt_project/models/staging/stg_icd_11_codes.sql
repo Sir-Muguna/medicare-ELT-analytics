@@ -18,7 +18,12 @@ with icd_11_raw_data as (
             else null 
         end as icd_code,
         
-        trim(TITLE) as disease_title,
+        -- Remove '- - - ' prefix from disease titles and clean
+        case 
+            when TITLE is not null and TITLE != '' 
+            then trim(replace(TITLE, '- - - ', ''))
+            else null 
+        end as disease_title,
         
         -- Boolean flags conversion
         case 
