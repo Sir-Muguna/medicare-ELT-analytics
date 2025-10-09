@@ -111,6 +111,7 @@ with raw_medicare_data as (
             when ge65_bene_sprsn_flag = 'N' then false
             else null
         end as is_ge65_beneficiary_suppressed,
+        2013 as service_year,
         
         -- Geographic information
         'NATIONAL' as prescriber_geo_level,

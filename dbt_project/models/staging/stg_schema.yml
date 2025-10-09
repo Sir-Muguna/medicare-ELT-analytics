@@ -74,7 +74,10 @@ models:
         
       - name: is_ge65_beneficiary_suppressed
         description: "Boolean flag indicating if 65+ beneficiary count is suppressed"
-        
+
+      - name: service_year
+        description: "Year of service data (2011, 2012, or 2013)"
+                
       - name: prescriber_geo_level
         description: "Geographic level of the data aggregation (hardcoded as NATIONAL)"
         

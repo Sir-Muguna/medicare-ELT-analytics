@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: staging
+    description: "Staging layer models - cleaned and standardized source data"
+    schema: "{{ target.schema }}_staging"
+    tables:
+      - name: stg_hospital_general_info
+        description: "Cleaned hospital general information with quality metrics"
+        
+      - name: stg_inpatient_charges
+        description: "Cleaned inpatient discharge data across 2011-2013"
+        
+      - name: stg_outpatient_charges  
+        description: "Cleaned outpatient service data across 2011-2013"
+        
+      - name: stg_medicare_data
+        description: "Cleaned Medicare Part D prescription drug data"
+        
+      - name: stg_icd_10_codes
+        description: "Cleaned ICD-10 disease classification codes"
+        
+      - name: stg_icd_11_codes
+        description: "Cleaned ICD-11 disease classification codes"
+
