@@ -18,5 +18,8 @@ models:
   medicare_elt_analytics:
     staging:
       +materialized: view
+      +tags: ['staging']
     marts:
       +materialized: table
+      +tags: ['marts']
+
