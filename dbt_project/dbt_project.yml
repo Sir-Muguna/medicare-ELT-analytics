@@ -15,6 +15,10 @@ target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 
 models:
-  medicare_elt_analytics: 
+  medicare_elt_analytics:
     staging:
       +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts
