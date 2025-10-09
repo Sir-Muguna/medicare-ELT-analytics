@@ -5,7 +5,6 @@ models:
     description: "Unified view of Medicare payments across inpatient and outpatient settings for provider performance ranking"
     config:
       materialized: table
-      schema: marts_finance
     columns:
       - name: provider_id
         description: "Unique identifier for healthcare provider"
@@ -57,7 +56,6 @@ models:
     description: "Master provider dimension table with geographic, service capability, and quality metrics for healthcare provider analysis"
     config:
       materialized: table
-      schema: marts_providers
       cluster_by: ['provider_state', 'provider_type']
     columns:
       - name: provider_id
@@ -136,7 +134,6 @@ models:
     description: "Unified diagnosis code reference table with ICD-10 and ICD-11 codes for clinical pattern analysis"
     config:
       materialized: table
-      schema: marts_clinical
     columns:
       - name: diagnosis_code
         description: "Standardized diagnosis code in uppercase"
@@ -189,7 +186,6 @@ models:
     description: "Outpatient service charge time series analysis at provider-APC level for trend analysis and service pattern identification"
     config:
       materialized: table
-      schema: marts_finance
     columns:
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
@@ -215,8 +211,9 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_providers')
-              field: provider_id
+              arguments:
+                to: ref('dim_providers')
+                field: provider_id
           
       - name: provider_name
         description: "Provider name in uppercase"
