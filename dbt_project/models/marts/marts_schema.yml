@@ -1,0 +1,259 @@
+version: 2
+
+models:
+  - name: fact_payment_analysis
+    description: "Unified view of Medicare payments across inpatient and outpatient settings for provider performance ranking"
+    config:
+      materialized: table
+      schema: marts_finance
+    columns:
+      - name: provider_id
+        description: "Unique identifier for healthcare provider"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: provider_name
+        description: "Name of healthcare facility in uppercase"
+        data_type: string
+        
+      - name: provider_state
+        description: "State where provider is located in uppercase"
+        data_type: string
+        
+      - name: service_year
+        description: "Year of service (2011, 2012, or 2013)"
+        data_type: integer
+        
+      - name: care_setting
+        description: "Type of care setting - INPATIENT or OUTPATIENT"
+        data_type: string
+        
+      - name: service_volume
+        description: "Number of services provided (discharges for inpatient, visits for outpatient)"
+        data_type: integer
+        
+      - name: medicare_payment_amount
+        description: "Average Medicare payments received per service"
+        data_type: numeric
+        
+      - name: total_payment_amount
+        description: "Average total payments received per service (includes copayments)"
+        data_type: numeric
+        
+      - name: submitted_charges_amount
+        description: "Average charges submitted per service"
+        data_type: numeric
+        
+      - name: medicare_payment_ratio
+        description: "Ratio of Medicare payments to submitted charges"
+        data_type: numeric
+        
+      - name: volume_category
+        description: "Categorized service volume (high_volume, medium_volume, low_volume)"
+        data_type: string
+
+  - name: dim_providers
+    description: "Master provider dimension table with geographic, service capability, and quality metrics for healthcare provider analysis"
+    config:
+      materialized: table
+      schema: marts_providers
+      cluster_by: ['provider_state', 'provider_type']
+    columns:
+      - name: provider_id
+        description: "Unique provider identifier - primary key for provider dimension"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
+      - name: provider_name
+        description: "Provider name in proper case formatting"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: provider_state
+        description: "Provider state location in proper case"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: county_name
+        description: "County where provider is located"
+        data_type: string
+        
+      - name: city
+        description: "City where provider is located"  
+        data_type: string
+        
+      - name: zip_code
+        description: "Postal zip code"
+        data_type: string
+        
+      - name: provider_type
+        description: "Type of hospital facility (Acute Care, Critical Access, etc.)"
+        data_type: string
+        
+      - name: ownership_type
+        description: "Ownership type of hospital (Government, Proprietary, etc.)"
+        data_type: string
+        
+      - name: offers_emergency_services
+        description: "Boolean flag indicating if provider offers emergency services"
+        data_type: boolean
+        
+      - name: ehr_interoperable
+        description: "Boolean flag indicating if provider meets EHR interoperability criteria"
+        data_type: boolean
+        
+      - name: quality_rating
+        description: "Hospital overall quality rating on 1-5 scale"
+        data_type: integer
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 1
+                max_value: 5
+              
+      - name: safety_measures_count
+        description: "Total number of safety measures tracked"
+        data_type: integer
+        
+      - name: readmission_measures_count  
+        description: "Total number of readmission measures tracked"
+        data_type: integer
+        
+      - name: referral_region
+        description: "Hospital referral region for healthcare service area"
+        data_type: string
+        
+      - name: service_level
+        description: "Business classification of provider service capability level"
+        data_type: string
+
+  - name: dim_diagnosis_codes
+    description: "Unified diagnosis code reference table with ICD-10 and ICD-11 codes for clinical pattern analysis"
+    config:
+      materialized: table
+      schema: marts_clinical
+    columns:
+      - name: diagnosis_code
+        description: "Standardized diagnosis code in uppercase"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
+      - name: code_system
+        description: "Code system identifier - ICD-10 or ICD-11"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: diagnosis_description
+        description: "Unified disease description in uppercase"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: chapter
+        description: "Chapter identifier in original format (roman numerals for ICD-10, numbers for ICD-11)"
+        data_type: string
+        
+      - name: chapter_description
+        description: "Chapter description in uppercase"
+        data_type: string
+        
+      - name: code_category
+        description: "Code category range or grouping in uppercase"
+        data_type: string
+        
+      - name: hierarchy_level
+        description: "Hierarchy depth level for clinical grouping"
+        data_type: integer
+        
+      - name: is_leaf_code
+        description: "Boolean indicating if this is a leaf node in the hierarchy"
+        data_type: boolean
+        
+      - name: classification_type
+        description: "Type of classification category in uppercase"
+        data_type: string
+        
+      - name: is_residual_category
+        description: "Boolean indicating if this is a residual category"
+        data_type: boolean
+
+  - name: fact_outpatient_services
+    description: "Outpatient service charge time series analysis at provider-APC level for trend analysis and service pattern identification"
+    config:
+      materialized: table
+      schema: marts_finance
+    columns:
+      - name: service_year
+        description: "Year of service data (2011, 2012, or 2013)"
+        data_type: integer
+        tests:
+          - not_null
+          
+      - name: apc_code
+        description: "Ambulatory Payment Classification code in uppercase"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: apc_description
+        description: "APC service description in uppercase"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: provider_id
+        description: "Unique provider identifier"
+        data_type: string
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_providers')
+              field: provider_id
+          
+      - name: provider_name
+        description: "Provider name in uppercase"
+        data_type: string
+        
+      - name: provider_state
+        description: "Provider state location in uppercase"
+        data_type: string
+        
+      - name: provider_type
+        description: "Type of hospital facility in uppercase"
+        data_type: string
+        
+      - name: offers_emergency_services
+        description: "Boolean flag indicating if provider offers emergency services"
+        data_type: boolean
+        
+      - name: quality_rating
+        description: "Hospital overall quality rating on 1-5 scale"
+        data_type: integer
+        
+      - name: service_volume
+        description: "Number of outpatient services provided"
+        data_type: integer
+        
+      - name: average_payment_amount
+        description: "Average payments received per service"
+        data_type: numeric
+        
+      - name: average_submitted_charge
+        description: "Average charges submitted per service"
+        data_type: numeric
+        
+      - name: payment_to_charge_ratio
+        description: "Ratio of average payments to submitted charges"
+        data_type: numeric
+        
+      - name: service_volume_category
+        description: "Business classification of service volume"
+        data_type: string
