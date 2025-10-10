@@ -17,11 +17,9 @@ clean-targets: ["target", "dbt_packages"]
 models:
   medicare_elt_analytics:
     staging:
-      +schema: staging
       +materialized: view
       +tags: ['staging']
     marts:
-      +schema: marts
       +materialized: table
       +tags: ['marts']
 
