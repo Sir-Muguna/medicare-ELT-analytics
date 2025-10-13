@@ -20,6 +20,7 @@ models:
       +materialized: view
       +tags: ['staging']
     marts:
+      +schema: marts
       +materialized: table
       +tags: ['marts']
 
