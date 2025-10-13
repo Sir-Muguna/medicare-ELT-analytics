@@ -279,8 +279,9 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_providers')
-              field: provider_id
+              arguments:
+                to: ref('dim_providers')
+                field: provider_id
           
       - name: provider_name
         description: "Provider name in uppercase"
@@ -301,10 +302,6 @@ models:
       - name: quality_rating
         description: "Hospital overall quality rating on 1-5 scale"
         data_type: integer
-        
-      # - name: referral_region
-      #   description: "Hospital referral region in uppercase"
-      #   data_type: string
         
       - name: diagnosis_description
         description: "ICD diagnosis description in uppercase"
