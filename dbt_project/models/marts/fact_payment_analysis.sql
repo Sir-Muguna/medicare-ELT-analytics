@@ -39,10 +39,10 @@ combined_payments as (
 )
 
 select
+    cast(service_year as integer) as service_year,
     cast(provider_id as string) as provider_id,
     cast(provider_name as string) as provider_name,
     cast(provider_state as string) as provider_state,
-    cast(service_year as integer) as service_year,
     cast(care_setting as string) as care_setting,
     cast(service_volume as integer) as service_volume,
     cast(medicare_payment_amount as numeric) as medicare_payment_amount,
