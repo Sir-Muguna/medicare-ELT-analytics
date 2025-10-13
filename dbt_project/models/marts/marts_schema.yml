@@ -254,3 +254,90 @@ models:
       - name: service_volume_category
         description: "Business classification of service volume"
         data_type: string
+
+  - name: fact_inpatient_services
+    description: "Inpatient discharge and payment analysis with diagnosis patterns for clinical trend analysis and state-level reporting"
+    config:
+      materialized: table
+      schema: marts_clinical
+    columns:
+      - name: service_year
+        description: "Year of service data (2011, 2012, or 2013)"
+        data_type: integer
+        tests:
+          - not_null
+          
+      - name: icd_category
+        description: "ICD diagnosis category in uppercase"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: provider_id
+        description: "Unique provider identifier"
+        data_type: string
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_providers')
+              field: provider_id
+          
+      - name: provider_name
+        description: "Provider name in uppercase"
+        data_type: string
+        
+      - name: provider_state
+        description: "Provider state location in uppercase"
+        data_type: string
+        
+      - name: provider_type
+        description: "Type of hospital facility in uppercase"
+        data_type: string
+        
+      - name: offers_emergency_services
+        description: "Boolean flag indicating if provider offers emergency services"
+        data_type: boolean
+        
+      - name: quality_rating
+        description: "Hospital overall quality rating on 1-5 scale"
+        data_type: integer
+        
+      # - name: referral_region
+      #   description: "Hospital referral region in uppercase"
+      #   data_type: string
+        
+      - name: diagnosis_description
+        description: "ICD diagnosis description in uppercase"
+        data_type: string
+        
+      - name: chapter
+        description: "ICD chapter in original format"
+        data_type: string
+        
+      - name: chapter_description
+        description: "ICD chapter description in uppercase"
+        data_type: string
+        
+      - name: total_discharges
+        description: "Number of inpatient discharges"
+        data_type: integer
+        
+      - name: average_covered_charges
+        description: "Average charges covered per discharge"
+        data_type: numeric
+        
+      - name: average_total_payments
+        description: "Average total payments per discharge"
+        data_type: numeric
+        
+      - name: average_medicare_payments
+        description: "Average Medicare payments per discharge"
+        data_type: numeric
+        
+      - name: medicare_payment_ratio
+        description: "Ratio of Medicare payments to covered charges"
+        data_type: numeric
+        
+      - name: discharge_volume_category
+        description: "Business classification of discharge volume"
+        data_type: string
