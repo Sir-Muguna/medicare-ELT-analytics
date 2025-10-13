@@ -259,7 +259,6 @@ models:
     description: "Inpatient discharge and payment analysis with diagnosis patterns for clinical trend analysis and state-level reporting"
     config:
       materialized: table
-      schema: marts_clinical
     columns:
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
