@@ -95,6 +95,8 @@ The core of the platform: 6 production-optimized models built on **Dimensional M
 5.  **`fact_inpatient_services`** 🛌: Detailed discharge and payment analysis, enabling clinical prevalence trends by state.
 6.  **`fact_medicare_claims`** 💊: Aggregated prescription drug claims data for cost and therapeutic category analysis.
 
+![Snowflake MARTS Schema](/docs/snowflake_db_marts.png)
+
 ---
 
 ## 🏗️ Architecture Standards
