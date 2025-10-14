@@ -337,3 +337,110 @@ models:
       - name: discharge_volume_category
         description: "Business classification of discharge volume"
         data_type: string
+
+  - name: fact_medicare_claims
+    description: "National-level Medicare Part D prescription drug claims analysis for drug utilization patterns, cost trends, and substance category analysis"
+    config:
+      materialized: table
+      cluster_by: ['service_year', 'drug_category']
+    columns:
+      - name: service_year
+        description: "Year of service data (2011, 2012, or 2013)"
+        data_type: integer
+        tests:
+          - not_null
+          
+      - name: drug_id
+        description: "Unique drug identifier - MD5 hash of brand and generic name"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
+      - name: brand_name
+        description: "Brand name of the prescribed drug in uppercase"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: generic_name
+        description: "Generic name of the prescribed drug in uppercase"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: total_claims
+        description: "Total number of claims submitted across all beneficiaries"
+        data_type: integer
+        
+      - name: total_beneficiaries
+        description: "Total number of unique Medicare beneficiaries receiving the drug"
+        data_type: integer
+        
+      - name: total_prescribers
+        description: "Total number of unique prescribing physicians"
+        data_type: integer
+        
+      - name: total_30day_fills
+        description: "Total number of 30-day medication fills across all claims"
+        data_type: numeric
+        
+      - name: total_drug_cost
+        description: "Total cost of all drug claims in dollars"
+        data_type: numeric
+        
+      - name: low_income_cost_share
+        description: "Low-income subsidy cost share amount in dollars"
+        data_type: numeric
+        
+      - name: non_low_income_cost_share
+        description: "Non-low-income subsidy cost share amount in dollars"
+        data_type: numeric
+        
+      - name: is_antibiotic_drug
+        description: "Boolean flag indicating if drug is classified as an antibiotic"
+        data_type: boolean
+        
+      - name: is_opioid_drug
+        description: "Boolean flag indicating if drug is classified as an opioid"
+        data_type: boolean
+        
+      - name: is_long_acting_opioid
+        description: "Boolean flag indicating if drug is classified as a long-acting opioid"
+        data_type: boolean
+        
+      - name: is_antipsychotic_drug
+        description: "Boolean flag indicating if drug is classified as an antipsychotic"
+        data_type: boolean
+        
+      - name: ge65_total_claims
+        description: "Total claims for beneficiaries aged 65 and older"
+        data_type: integer
+        
+      - name: ge65_total_beneficiaries
+        description: "Total beneficiaries aged 65 and older receiving the drug"
+        data_type: integer
+        
+      - name: ge65_total_30day_fills
+        description: "30-day medication fills for 65+ beneficiaries"
+        data_type: numeric
+        
+      - name: ge65_total_drug_cost
+        description: "Total drug cost for 65+ beneficiaries in dollars"
+        data_type: numeric
+        
+      - name: cost_per_claim
+        description: "Average cost per claim calculated as total drug cost divided by total claims"
+        data_type: numeric
+        
+      - name: claims_per_prescriber
+        description: "Average claims per prescribing physician calculated as total claims divided by total prescribers"
+        data_type: numeric
+        
+      - name: ge65_claim_ratio
+        description: "Ratio of 65+ claims to total claims, representing proportion of elderly beneficiaries"
+        data_type: numeric
+        
+      - name: drug_category
+        description: "Business classification of drug type based on therapeutic category flags"
+        data_type: string
