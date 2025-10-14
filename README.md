@@ -39,9 +39,9 @@ The pipeline integrates structured, semi-structured, and API-based data sources 
 **Description**: Outpatient charge data (2011–2013) from local PostgreSQL database  
 
 **Setup**
-```bash
+bash
 ngrok tcp 5432
-```
+
 
 **Connector**: PostgreSQL → Snowflake via public ngrok endpoint  
 **Destination Tables**
