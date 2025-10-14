@@ -10,7 +10,7 @@ The solution leverages **Airbyte Cloud** for reliable, multi-source ingestion an
 ## 🧱 Architecture
 The system follows a modern Data Warehouse paradigm, moving data from diverse sources through Raw and Staging layers into a final Analytics Mart.
 
-
+![ELT Architecture](/docs/ELT_architecture.png)
 
 **Core Components**
 - **Airbyte Cloud** 📤 → Data ingestion from 4 unique, heterogenous sources (APIs, DBs, Files).
@@ -49,7 +49,7 @@ Ingesting high-volume, dynamic prescription drug data.
 | Google Drive | JSON | `_AIRBYTE_RAW_GDRIVE_` | **Semi-Structured** (Files) |
 | REST API | HTTP | `_AIRBYTE_RAW_API_` | **Incremental** (API) |
 
-
+![Snowflake RAW Schema](/docs/snowflake_db_raw.png)
 
 ---
 
@@ -78,7 +78,7 @@ The staging layer materializes as **Views** for efficiency, standardizing all co
 - **Consistent data types** (e.g., correct numerics, booleans).
 - **Strategic NULL handling** applied where data sparsity was an issue.
 
-
+![Snowflake STG Schema](/docs/snowflake_db_stg.png)
 
 ---
 
