@@ -1,7 +1,3 @@
-
----
-
-````markdown
 # 🏥 Healthcare Data Platform — End-to-End Ingestion & Transformation Pipeline
 
 ## 📘 Overview
@@ -40,10 +36,11 @@ The pipeline integrates structured, semi-structured, and API-based data sources 
 
 ### 2. PostgreSQL (Historical Data via Ngrok)
 **Description**: Outpatient charge data (2011–2013) from local PostgreSQL database  
+
 **Setup**
 ```bash
 ngrok tcp 5432
-````
+
 
 **Connector**: PostgreSQL → Snowflake via public ngrok endpoint
 **Destination Tables**
