@@ -1,11 +1,10 @@
-{% macro drop_staging_objects(schema_name) %}
-  {% set sql %}
-    begin
-      for r in (select table_name from information_schema.tables where table_schema = upper('{{ schema_name }}') and table_name ilike 'stg_%') do
-        execute immediate 'drop view if exists {{ schema_name }}.' || r.table_name;
-      end for;
-    end;
-  {% endset %}
-  {% do run_query(sql) %}
-  {{ log("✅ Dropped all staging objects in schema " ~ schema_name, info=True) }}
-{% endmacro %}
+{% macro generate_schema_name(custom_schema_name, node) -%}
+    {# Explicitly set schema logic based on tags #}
+    {% if 'staging' in node.tags %}
+        {{ 'staging' }}
+    {% elif 'marts' in node.tags %}
+        {{ 'marts' }}
+    {% else %}
+        {{ target.schema }}
+    {% endif %}
+{%- endmacro %}
