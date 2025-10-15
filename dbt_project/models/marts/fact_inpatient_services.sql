@@ -74,6 +74,7 @@ combined_data as (
     left join diagnosis_context dc on ib.icd_category = dc.diagnosis_code
 )
 
+
 select
     -- UUID Primary Key
     md5(

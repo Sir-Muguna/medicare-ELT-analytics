@@ -465,3 +465,5 @@ models:
       - name: drug_category
         description: "Business classification of drug type based on therapeutic category flags"
         data_type: string
+
+        

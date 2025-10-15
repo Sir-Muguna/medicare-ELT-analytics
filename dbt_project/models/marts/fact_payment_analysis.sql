@@ -38,6 +38,7 @@ combined_payments as (
     select * from outpatient_payments
 )
 
+
 select
     -- UUID Primary Key
     md5(

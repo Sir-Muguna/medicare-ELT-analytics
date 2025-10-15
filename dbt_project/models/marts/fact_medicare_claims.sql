@@ -70,6 +70,7 @@ enriched_data as (
     from medicare_base
 )
 
+
 select
     -- UUID Primary Key (drug_id + service_year)
     md5(
