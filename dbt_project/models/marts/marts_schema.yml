@@ -6,6 +6,13 @@ models:
     config:
       materialized: table
     columns:
+      - name: payment_id
+        description: "UUID primary key generated from provider_id, service_year, and care_setting"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
       - name: provider_id
         description: "Unique identifier for healthcare provider"
         data_type: string
@@ -122,10 +129,6 @@ models:
         description: "Total number of readmission measures tracked"
         data_type: integer
         
-      - name: referral_region
-        description: "Hospital referral region for healthcare service area"
-        data_type: string
-        
       - name: service_level
         description: "Business classification of provider service capability level"
         data_type: string
@@ -187,6 +190,13 @@ models:
     config:
       materialized: table
     columns:
+      - name: outpatient_id
+        description: "UUID primary key generated from provider_id, service_year, and apc_code"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
         data_type: integer
@@ -211,9 +221,8 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_providers')
-                field: provider_id
+              to: ref('dim_providers')
+              field: provider_id
           
       - name: provider_name
         description: "Provider name in uppercase"
@@ -260,6 +269,13 @@ models:
     config:
       materialized: table
     columns:
+      - name: inpatient_id
+        description: "UUID primary key generated from provider_id, service_year, and icd_category"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
         data_type: integer
@@ -278,9 +294,8 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_providers')
-                field: provider_id
+              to: ref('dim_providers')
+              field: provider_id
           
       - name: provider_name
         description: "Provider name in uppercase"
@@ -344,6 +359,13 @@ models:
       materialized: table
       cluster_by: ['service_year', 'drug_category']
     columns:
+      - name: claim_id
+        description: "UUID primary key generated from drug_id and service_year"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
         data_type: integer
@@ -355,7 +377,6 @@ models:
         data_type: string
         tests:
           - not_null
-          - unique
           
       - name: brand_name
         description: "Brand name of the prescribed drug in uppercase"

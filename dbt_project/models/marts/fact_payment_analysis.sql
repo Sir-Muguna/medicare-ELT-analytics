@@ -39,6 +39,12 @@ combined_payments as (
 )
 
 select
+    -- UUID Primary Key
+    md5(
+        cast(provider_id as string) || '-' || 
+        cast(service_year as string) || '-' || 
+        cast(care_setting as string)
+    ) as payment_id,
     cast(service_year as integer) as service_year,
     cast(provider_id as string) as provider_id,
     cast(provider_name as string) as provider_name,

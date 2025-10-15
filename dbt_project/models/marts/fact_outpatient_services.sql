@@ -72,6 +72,12 @@ combined_data as (
 )
 
 select
+    -- UUID Primary Key
+    md5(
+        cast(provider_id as string) || '-' || 
+        cast(service_year as string) || '-' || 
+        cast(apc_code as string)
+    ) as outpatient_id,
     service_year,
     apc_code,
     apc_description,

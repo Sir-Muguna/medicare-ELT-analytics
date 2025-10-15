@@ -71,6 +71,11 @@ enriched_data as (
 )
 
 select
+    -- UUID Primary Key (drug_id + service_year)
+    md5(
+        cast(drug_id as string) || '-' || 
+        cast(service_year as string)
+    ) as claim_id,
     service_year,
     drug_id,
     brand_name,
