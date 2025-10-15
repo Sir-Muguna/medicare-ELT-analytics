@@ -71,6 +71,7 @@ combined_data as (
     inner join provider_context pc on apc.provider_id = pc.provider_id
 )
 
+
 select
     -- UUID Primary Key
     md5(
