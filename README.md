@@ -108,6 +108,8 @@ The core of the platform: 6 production-optimized models built on **Dimensional M
 | **Performance** | Table materialization for all marts + strategic **Snowflake clustering** on high-cardinality keys. |
 | **Documentation** | Full **YAML schema** documentation and description fields for all models, sources, and columns. |
 
+![Star Schema Architecture](/docs/medicare_mart_layer_ERD.png)
+
 ---
 
 ## 💼 Business Use Cases & Value
