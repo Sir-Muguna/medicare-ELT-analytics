@@ -7,7 +7,7 @@
 
 with icd_10_codes as (
     select
-        upper(cast(icd_code as string)) as diagnosis_code,
+        upper(cast(icd_code as string)) as icd_code,  
         'ICD-10' as code_system,
         upper(cast(disease_description as string)) as diagnosis_description,
         upper(cast(chapter as string)) as chapter,
@@ -22,12 +22,12 @@ with icd_10_codes as (
         upper(cast('STANDARD' as string)) as classification_type,
         false as is_residual_category
     from {{ ref('stg_icd_10_codes') }}
-    where icd_code is not null  -- Ensure ICD-10 codes are not null
+    where icd_code is not null
 ),
 
 icd_11_codes as (
     select
-        upper(cast(icd_code as string)) as diagnosis_code,
+        upper(cast(icd_code as string)) as icd_code,  
         'ICD-11' as code_system,
         upper(cast(disease_title as string)) as diagnosis_description,
         upper(cast(chapter_number as string)) as chapter,
@@ -38,7 +38,7 @@ icd_11_codes as (
         upper(cast(classification_kind as string)) as classification_type,
         cast(is_residual_category as boolean) as is_residual_category
     from {{ ref('stg_icd_11_codes') }}
-    where icd_code is not null  -- Also ensure ICD-11 codes are not null for consistency
+    where icd_code is not null
 ),
 
 unified_codes as (
@@ -48,15 +48,13 @@ unified_codes as (
 )
 
 select
-    diagnosis_code,
+    icd_code,  
     code_system,
     code_category,
     diagnosis_description,
     chapter,
     chapter_description,
     hierarchy_level,
-    -- is_leaf_code,
-    classification_type,
-    -- is_residual_category
+    classification_type
 from unified_codes
-where diagnosis_code is not null  -- Final safeguard to ensure no null diagnosis codes
+where icd_code is not null  

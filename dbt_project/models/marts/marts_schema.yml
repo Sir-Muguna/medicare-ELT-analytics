@@ -137,7 +137,7 @@ models:
     config:
       materialized: table
     columns:
-      - name: diagnosis_code
+      - name: icd_code
         description: "Standardized diagnosis code in uppercase"
         data_type: string
         tests:
@@ -269,7 +269,7 @@ models:
       materialized: table
     columns:
       - name: inpatient_id
-        description: "UUID primary key generated from provider_id, service_year, and icd_category"
+        description: "UUID primary key generated from provider_id, service_year, and icd_code"
         data_type: string
         tests:
           - not_null
@@ -281,7 +281,7 @@ models:
         tests:
           - not_null
           
-      - name: icd_category
+      - name: icd_code
         description: "ICD diagnosis category in uppercase"
         data_type: string
         tests:
