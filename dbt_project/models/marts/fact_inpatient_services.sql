@@ -8,7 +8,7 @@
 with inpatient_base as (
     select
         cast(service_year as integer) as service_year,
-        upper(cast(icd_category as string)) as icd_category,
+        upper(cast(icd_category as string)) as icd_code,  
         -- Remove decimal and cast to string to match dim_providers format
         cast(cast(provider_id as integer) as string) as provider_id,
         cast(total_discharges as integer) as total_discharges,
@@ -34,7 +34,7 @@ provider_context as (
 
 diagnosis_context as (
     select
-        upper(cast(diagnosis_code as string)) as diagnosis_code,
+        upper(cast(icd_code as string)) as icd_code,  
         upper(cast(diagnosis_description as string)) as diagnosis_description,
         upper(cast(chapter as string)) as chapter,
         upper(cast(chapter_description as string)) as chapter_description,
@@ -46,7 +46,7 @@ diagnosis_context as (
 combined_data as (
     select
         ib.service_year,
-        ib.icd_category,
+        ib.icd_code,  
         ib.provider_id,
         pc.provider_name,
         pc.provider_state,
@@ -71,16 +71,15 @@ combined_data as (
         end as discharge_volume_category
     from inpatient_base ib
     inner join provider_context pc on ib.provider_id = pc.provider_id
-    left join diagnosis_context dc on ib.icd_category = dc.diagnosis_code
+    left join diagnosis_context dc on ib.icd_code = dc.icd_code  -- Changed JOIN to use icd_code
 )
-
 
 select
     -- UUID Primary Key
     md5(
         cast(provider_id as string) || '-' || 
         cast(service_year as string) || '-' || 
-        cast(icd_category as string)
+        cast(icd_code as string)  
     ) as inpatient_id,
     service_year,
     provider_id,
@@ -92,7 +91,7 @@ select
     chapter,
     chapter_description,
     code_category,
-    icd_category,
+    icd_code,  
     diagnosis_description,
     total_discharges,
     average_covered_charges,
