@@ -5,7 +5,7 @@
     )
 }}
 
-with provider_base as (
+with hospital_providers as (
     select
         cast(provider_id as string) as provider_id,
         upper(cast(hospital_name as string)) as provider_name,
@@ -23,34 +23,77 @@ with provider_base as (
     from {{ ref('stg_hospital_general_info') }}
 ),
 
-referral_regions as (
-    select distinct
-        cast(provider_id as string) as provider_id,
-        cast(hospital_referral_region as string) as referral_region
-    from {{ ref('stg_inpatient_charges') }}
+-- Get ALL providers from ALL fact table sources
+all_provider_ids as (
+    -- From inpatient
+    select distinct cast(provider_id as string) as provider_id from {{ ref('stg_inpatient_charges') }}
+    union
+    -- From outpatient  
+    select distinct cast(provider_id as string) as provider_id from {{ ref('stg_outpatient_charges') }}
+),
+
+-- Enrich with available provider data
+enriched_providers as (
+    select
+        api.provider_id,
+        -- Provider attributes (with fallbacks for missing data)
+        coalesce(hp.provider_name, 'UNKNOWN_PROVIDER') as provider_name,
+        coalesce(hp.provider_state, 'UNKNOWN_STATE') as provider_state,
+        hp.county_name,
+        hp.city,
+        hp.zip_code,
+        coalesce(hp.provider_type, 'UNKNOWN_TYPE') as provider_type,
+        hp.ownership_type,
+        coalesce(hp.offers_emergency_services, false) as offers_emergency_services,
+        coalesce(hp.ehr_interoperable, false) as ehr_interoperable,
+        hp.quality_rating,
+        hp.safety_measures_count,
+        hp.readmission_measures_count
+    from all_provider_ids api
+    left join hospital_providers hp on api.provider_id = hp.provider_id
+),
+
+final_providers as (
+    select
+        -- Natural Key
+        provider_id,
+        
+        -- Surrogate Key
+        md5(
+            coalesce(provider_id, '') ||
+            coalesce(provider_name, '') ||
+            coalesce(provider_state, '') ||
+            coalesce(provider_type, '')
+        ) as provider_key,
+        
+        -- Provider Attributes
+        provider_name,
+        provider_state,
+        county_name,
+        city,
+        zip_code,
+        provider_type,
+        ownership_type,
+        offers_emergency_services,
+        ehr_interoperable,
+        quality_rating,
+        safety_measures_count,
+        readmission_measures_count,
+        
+        -- Derived Business Logic
+        case
+            when offers_emergency_services and quality_rating >= 4 then 'PREMIUM'
+            when offers_emergency_services then 'STANDARD_EMERGENCY' 
+            when quality_rating >= 4 then 'HIGH_QUALITY'
+            else 'BASIC'
+        end as service_level,
+        
+        -- SCD Type 2 Metadata
+        current_timestamp() as effective_date,
+        null as end_date,
+        true as is_current_flag
+        
+    from enriched_providers
 )
 
-select
-    pb.provider_id,
-    pb.provider_name,
-    pb.provider_state,
-    pb.county_name,
-    pb.city,
-    pb.zip_code,
-    pb.provider_type,
-    pb.ownership_type,
-    pb.offers_emergency_services,
-    pb.ehr_interoperable,
-    pb.quality_rating,
-    pb.safety_measures_count,
-    pb.readmission_measures_count,
-    -- rr.referral_region,
-    -- Derived business logic with uppercase values
-    case
-        when pb.offers_emergency_services and pb.quality_rating >= 4 then 'PREMIUM'
-        when pb.offers_emergency_services then 'STANDARD_EMERGENCY' 
-        when pb.quality_rating >= 4 then 'HIGH_QUALITY'
-        else 'BASIC'
-    end as service_level
-from provider_base pb
-left join referral_regions rr on pb.provider_id = rr.provider_id
+select * from final_providers

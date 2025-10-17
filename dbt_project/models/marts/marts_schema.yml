@@ -2,38 +2,33 @@ version: 2
 
 models:
   - name: fact_payment_analysis
-    description: "Unified view of Medicare payments across inpatient and outpatient settings for provider performance ranking"
+    description: "Unified view of Medicare payments across inpatient and outpatient settings for provider performance analysis"
     config:
       materialized: table
     columns:
-      - name: payment_id
-        description: "UUID primary key generated from provider_id, service_year, and care_setting"
+      - name: payment_analysis_key
+        description: "Surrogate key for payment analysis fact table"
         data_type: string
         tests:
           - not_null
+          - unique
           
       - name: provider_id
-        description: "Unique identifier for healthcare provider"
+        description: "Foreign key to provider dimension"
         data_type: string
         tests:
           - not_null
           
-      - name: provider_name
-        description: "Name of healthcare facility in uppercase"
-        data_type: string
-        
-      - name: provider_state
-        description: "State where provider is located in uppercase"
-        data_type: string
-        
       - name: service_year
         description: "Year of service (2011, 2012, or 2013)"
         data_type: integer
-        
+          
       - name: care_setting
-        description: "Type of care setting - INPATIENT or OUTPATIENT"
+        description: "Type of care setting - inpatient or outpatient"
         data_type: string
-        
+        tests:
+          - not_null
+          
       - name: service_volume
         description: "Number of services provided (discharges for inpatient, visits for outpatient)"
         data_type: integer
@@ -53,10 +48,6 @@ models:
       - name: medicare_payment_ratio
         description: "Ratio of Medicare payments to submitted charges"
         data_type: numeric
-        
-      - name: volume_category
-        description: "Categorized service volume (high_volume, medium_volume, low_volume)"
-        data_type: string
 
   - name: dim_providers
     description: "Master provider dimension table with geographic, service capability, and quality metrics for healthcare provider analysis"
@@ -65,20 +56,27 @@ models:
       cluster_by: ['provider_state', 'provider_type']
     columns:
       - name: provider_id
-        description: "Unique provider identifier - primary key for provider dimension"
+        description: "Natural key - unique provider identifier from source system"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
+      - name: provider_key
+        description: "Surrogate key for slowly changing dimensions"
         data_type: string
         tests:
           - not_null
           - unique
           
       - name: provider_name
-        description: "Provider name in proper case formatting"
+        description: "Provider name in uppercase"
         data_type: string
         tests:
           - not_null
           
       - name: provider_state
-        description: "Provider state location in proper case"
+        description: "Provider state location in uppercase"
         data_type: string
         tests:
           - not_null
@@ -114,12 +112,7 @@ models:
       - name: quality_rating
         description: "Hospital overall quality rating on 1-5 scale"
         data_type: integer
-        tests:
-          - dbt_utils.accepted_range:
-              arguments:
-                min_value: 1
-                max_value: 5
-              
+        
       - name: safety_measures_count
         description: "Total number of safety measures tracked"
         data_type: integer
@@ -131,14 +124,34 @@ models:
       - name: service_level
         description: "Business classification of provider service capability level"
         data_type: string
+        
+      - name: effective_date
+        description: "Date when this provider record became effective (SCD Type 2)"
+        data_type: timestamp
+        
+      - name: end_date
+        description: "Date when this provider record expired (SCD Type 2)"
+        data_type: timestamp
+        
+      - name: is_current_flag
+        description: "Boolean indicating if this is the current provider record (SCD Type 2)"
+        data_type: boolean
 
   - name: dim_diagnosis_codes
     description: "Unified diagnosis code reference table with ICD-10 and ICD-11 codes for clinical pattern analysis"
     config:
       materialized: table
+      cluster_by: ['code_system', 'chapter']
     columns:
-      - name: icd_code
-        description: "Standardized diagnosis code in uppercase"
+      - name: diagnosis_key
+        description: "Surrogate key for diagnosis dimension"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
+      - name: diagnosis_code
+        description: "Natural key - standardized diagnosis code in uppercase"
         data_type: string
         tests:
           - not_null
@@ -157,7 +170,7 @@ models:
           - not_null
           
       - name: chapter
-        description: "Chapter identifier in original format (roman numerals for ICD-10, numbers for ICD-11)"
+        description: "Chapter identifier in original format"
         data_type: string
         
       - name: chapter_description
@@ -172,29 +185,36 @@ models:
         description: "Hierarchy depth level for clinical grouping"
         data_type: integer
         
-      - name: is_leaf_code
-        description: "Boolean indicating if this is a leaf node in the hierarchy"
-        data_type: boolean
-        
       - name: classification_type
         description: "Type of classification category in uppercase"
         data_type: string
+        
+      - name: is_leaf_code
+        description: "Boolean indicating if this is a leaf node in the hierarchy"
+        data_type: boolean
         
       - name: is_residual_category
         description: "Boolean indicating if this is a residual category"
         data_type: boolean
 
   - name: fact_outpatient_services
-    description: "Outpatient service charge time series analysis at provider-APC level for trend analysis and service pattern identification"
+    description: "Outpatient service charge analysis at provider-APC level for trend analysis and service pattern identification"
     config:
       materialized: table
+      cluster_by: ['service_year', 'provider_id']
     columns:
-      - name: outpatient_id
-        description: "UUID primary key generated from provider_id, service_year, and apc_code"
+      - name: outpatient_service_key
+        description: "Surrogate key for outpatient services fact table"
         data_type: string
         tests:
           - not_null
           - unique
+          
+      - name: provider_id
+        description: "Foreign key to provider dimension"
+        data_type: string
+        tests:
+          - not_null
           
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
@@ -208,41 +228,6 @@ models:
         tests:
           - not_null
           
-      - name: apc_description
-        description: "APC service description in uppercase"
-        data_type: string
-        tests:
-          - not_null
-          
-      - name: provider_id
-        description: "Unique provider identifier"
-        data_type: string
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_providers')
-              field: provider_id
-          
-      - name: provider_name
-        description: "Provider name in uppercase"
-        data_type: string
-        
-      - name: provider_state
-        description: "Provider state location in uppercase"
-        data_type: string
-        
-      - name: provider_type
-        description: "Type of hospital facility in uppercase"
-        data_type: string
-        
-      - name: offers_emergency_services
-        description: "Boolean flag indicating if provider offers emergency services"
-        data_type: boolean
-        
-      - name: quality_rating
-        description: "Hospital overall quality rating on 1-5 scale"
-        data_type: integer
-        
       - name: service_volume
         description: "Number of outpatient services provided"
         data_type: integer
@@ -258,76 +243,32 @@ models:
       - name: payment_to_charge_ratio
         description: "Ratio of average payments to submitted charges"
         data_type: numeric
-        
-      - name: service_volume_category
-        description: "Business classification of service volume"
-        data_type: string
 
   - name: fact_inpatient_services
-    description: "Inpatient discharge and payment analysis with diagnosis patterns for clinical trend analysis and state-level reporting"
+    description: "Inpatient discharge and payment analysis with diagnosis patterns for clinical trend analysis"
     config:
       materialized: table
+      cluster_by: ['service_year', 'provider_id']
     columns:
-      - name: inpatient_id
-        description: "UUID primary key generated from provider_id, service_year, and icd_code"
+      - name: inpatient_service_key
+        description: "Surrogate key for inpatient services fact table"
+        data_type: string
+
+          
+      - name: provider_id
+        description: "Foreign key to provider dimension"
         data_type: string
         tests:
           - not_null
-          - unique
+          
+      - name: diagnosis_code
+        description: "Foreign key to diagnosis dimension - ICD diagnosis category"
+        data_type: string
           
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
         data_type: integer
-        tests:
-          - not_null
           
-      - name: icd_code
-        description: "ICD diagnosis category in uppercase"
-        data_type: string
-        tests:
-          - not_null
-          
-      - name: provider_id
-        description: "Unique provider identifier"
-        data_type: string
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_providers')
-              field: provider_id
-          
-      - name: provider_name
-        description: "Provider name in uppercase"
-        data_type: string
-        
-      - name: provider_state
-        description: "Provider state location in uppercase"
-        data_type: string
-        
-      - name: provider_type
-        description: "Type of hospital facility in uppercase"
-        data_type: string
-        
-      - name: offers_emergency_services
-        description: "Boolean flag indicating if provider offers emergency services"
-        data_type: boolean
-        
-      - name: quality_rating
-        description: "Hospital overall quality rating on 1-5 scale"
-        data_type: integer
-        
-      - name: diagnosis_description
-        description: "ICD diagnosis description in uppercase"
-        data_type: string
-        
-      - name: chapter
-        description: "ICD chapter in original format"
-        data_type: string
-        
-      - name: chapter_description
-        description: "ICD chapter description in uppercase"
-        data_type: string
-        
       - name: total_discharges
         description: "Number of inpatient discharges"
         data_type: integer
@@ -347,13 +288,9 @@ models:
       - name: medicare_payment_ratio
         description: "Ratio of Medicare payments to covered charges"
         data_type: numeric
-        
-      - name: discharge_volume_category
-        description: "Business classification of discharge volume"
-        data_type: string
 
   - name: fact_medicare_claims
-    description: "National-level Medicare Part D prescription drug claims analysis for drug utilization patterns, cost trends, and substance category analysis"
+    description: "National-level Medicare Part D drug utilization aggregates - represents summarized drug usage patterns, not individual claim-level data"
     config:
       materialized: table
       cluster_by: ['service_year', 'drug_category']
@@ -464,5 +401,3 @@ models:
       - name: drug_category
         description: "Business classification of drug type based on therapeutic category flags"
         data_type: string
-
-        

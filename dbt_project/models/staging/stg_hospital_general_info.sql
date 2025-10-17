@@ -12,7 +12,7 @@ with hospital_info_raw_data as (
         _AIRBYTE_EXTRACTED_AT,
         
         -- Hospital Identification & Location
-        trim(PROVIDER_ID) as provider_id,
+        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
         trim(HOSPITAL_NAME) as hospital_name,
         trim(ADDRESS) as address,
         trim(CITY) as city,
@@ -77,4 +77,41 @@ with hospital_info_raw_data as (
     from {{ source('raw', 'hospital_general_info') }}
 )
 
-select * from hospital_info_raw_data
+select 
+    _AIRBYTE_RAW_ID,
+    _AIRBYTE_EXTRACTED_AT,
+    provider_id,  -- Now consistently string type
+    hospital_name,
+    address,
+    city,
+    state,
+    zip_code,
+    county_name,
+    phone_number,
+    hospital_type,
+    hospital_ownership,
+    has_emergency_services,
+    meets_ehr_interoperability_criteria,
+    hospital_overall_rating,
+    safety_measures_count,
+    readmission_measures_count,
+    safety_measures_worse_count,
+    safety_measures_better_count,
+    mortality_group_measure_count,
+    mortality_measures_worse_count,
+    mortality_measures_better_count,
+    readmission_measures_worse_count,
+    patient_experience_measures_count,
+    readmission_measures_better_count,
+    facility_mortality_measures_count,
+    safety_measures_no_different_count,
+    facility_care_safety_measures_count,
+    facility_readmission_measures_count,
+    mortality_measures_no_different_count,
+    readmission_measures_no_different_count,
+    timely_care_measures_count,
+    facility_patient_experience_measures_count,
+    facility_timely_care_measures_count,
+    hospital_overall_rating_footnote,
+    patient_experience_measures_footnote
+from hospital_info_raw_data

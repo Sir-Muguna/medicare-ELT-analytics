@@ -10,7 +10,7 @@ with outpatient_2011 as (
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
         trim(APC) as apc,
-        trim(PROVIDER_ID) as provider_id,
+        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -28,7 +28,7 @@ outpatient_2012 as (
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
         trim(APC) as apc,
-        trim(PROVIDER_ID) as provider_id,
+        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -46,7 +46,7 @@ outpatient_2013 as (
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
         trim(APC) as apc,
-        trim(PROVIDER_ID) as provider_id,
+        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -67,4 +67,18 @@ combined_outpatient as (
     select * from outpatient_2013
 )
 
-select * from combined_outpatient
+select 
+    _AIRBYTE_RAW_ID,
+    _AIRBYTE_EXTRACTED_AT,
+    apc,
+    provider_id,           
+    provider_name,
+    provider_street_address,
+    provider_city,
+    provider_state,
+    provider_zipcode,
+    outpatient_services_count,
+    average_total_payments,
+    average_submitted_charges,
+    service_year
+from combined_outpatient
