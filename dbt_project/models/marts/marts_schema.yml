@@ -6,7 +6,7 @@ models:
     config:
       materialized: table
     columns:
-      - name: payment_analysis_key
+      - name: payment__id
         description: "Surrogate key for payment analysis fact table"
         data_type: string
         tests:
@@ -143,7 +143,7 @@ models:
       materialized: table
       cluster_by: ['code_system', 'chapter']
     columns:
-      - name: diagnosis_key
+      - name: diagnosis_id
         description: "Surrogate key for diagnosis dimension"
         data_type: string
         tests:
@@ -203,7 +203,7 @@ models:
       materialized: table
       cluster_by: ['service_year', 'provider_id']
     columns:
-      - name: outpatient_service_key
+      - name: outpatient__id
         description: "Surrogate key for outpatient services fact table"
         data_type: string
         tests:
