@@ -1,102 +1,70 @@
+-- models/staging/stg_inpatient_charges.sql
 {{
     config(
-        materialized='table',
-        cluster_by=['service_year', 'provider_state']
+        materialized='view'
     )
 }}
 
-with inpatient_base as (
+with inpatient_2011 as (
     select
-        cast(service_year as integer) as service_year,
-        upper(cast(icd_category as string)) as icd_code,  
-        -- Remove decimal and cast to string to match dim_providers format
-        cast(cast(provider_id as integer) as string) as provider_id,
-        cast(total_discharges as integer) as total_discharges,
-        cast(average_covered_charges as numeric) as average_covered_charges,
-        cast(average_total_payments as numeric) as average_total_payments,
-        cast(average_medicare_payments as numeric) as average_medicare_payments
-    from {{ ref('stg_inpatient_charges') }}
-    where provider_id is not null 
-      and service_year is not null 
-      and icd_category is not null
+        cast(trim(PROVIDER_ID) as string) as provider_id,
+        trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
+        
+        -- Measures/Facts
+        TOTAL_DISCHARGES as total_discharges,
+        AVERAGE_COVERED_CHARGES as average_covered_charges,
+        AVERAGE_TOTAL_PAYMENTS as average_total_payments,
+        AVERAGE_MEDICARE_PAYMENTS as average_medicare_payments,
+        
+        -- Diagnosis dimension key
+        trim(ICD_CATEGORY) as icd_category,
+        
+        -- Time dimension
+        2011 as service_year
+    from {{ source('raw', 'inpatient_2011') }}
 ),
 
-provider_context as (
+inpatient_2012 as (
     select
-        provider_id,
-        upper(cast(provider_name as string)) as provider_name,
-        upper(cast(provider_state as string)) as provider_state,
-        upper(cast(provider_type as string)) as provider_type,
-        offers_emergency_services,
-        quality_rating
-    from {{ ref('dim_providers') }}
+        cast(trim(PROVIDER_ID) as string) as provider_id,
+        trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
+        TOTAL_DISCHARGES as total_discharges,
+        AVERAGE_COVERED_CHARGES as average_covered_charges,
+        AVERAGE_TOTAL_PAYMENTS as average_total_payments,
+        AVERAGE_MEDICARE_PAYMENTS as average_medicare_payments,
+        trim(ICD_CATEGORY) as icd_category,
+        2012 as service_year
+    from {{ source('raw', 'inpatient_2012') }}
 ),
 
-diagnosis_context as (
+inpatient_2013 as (
     select
-        upper(cast(icd_code as string)) as icd_code,  
-        upper(cast(diagnosis_description as string)) as diagnosis_description,
-        upper(cast(chapter as string)) as chapter,
-        upper(cast(chapter_description as string)) as chapter_description,
-        upper(cast(code_category as string)) as code_category
-    from {{ ref('dim_diagnosis_codes') }}
-    where code_system = 'ICD-10'
+        cast(trim(PROVIDER_ID) as string) as provider_id,
+        trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
+        TOTAL_DISCHARGES as total_discharges,
+        AVERAGE_COVERED_CHARGES as average_covered_charges,
+        AVERAGE_TOTAL_PAYMENTS as average_total_payments,
+        AVERAGE_MEDICARE_PAYMENTS as average_medicare_payments,
+        trim(ICD_CATEGORY) as icd_category,
+        2013 as service_year
+    from {{ source('raw', 'inpatient_2013') }}
 ),
 
-combined_data as (
-    select
-        ib.service_year,
-        ib.icd_code,  
-        ib.provider_id,
-        pc.provider_name,
-        pc.provider_state,
-        pc.provider_type,
-        pc.offers_emergency_services,
-        pc.quality_rating,
-        dc.diagnosis_description,
-        dc.chapter,
-        dc.chapter_description,
-        dc.code_category,
-        ib.total_discharges,
-        ib.average_covered_charges,
-        ib.average_total_payments,
-        ib.average_medicare_payments,
-        -- Derived metrics
-        round(ib.average_medicare_payments / nullif(ib.average_covered_charges, 0), 4) as medicare_payment_ratio,
-        -- Volume categorization
-        case
-            when ib.total_discharges > 1000 then 'HIGH_VOLUME'
-            when ib.total_discharges >= 100 then 'MEDIUM_VOLUME'
-            else 'LOW_VOLUME'
-        end as discharge_volume_category
-    from inpatient_base ib
-    inner join provider_context pc on ib.provider_id = pc.provider_id
-    left join diagnosis_context dc on ib.icd_code = dc.icd_code  -- Changed JOIN to use icd_code
+combined_inpatient as (
+    select * from inpatient_2011
+    union all
+    select * from inpatient_2012
+    union all
+    select * from inpatient_2013
 )
 
-select
-    -- UUID Primary Key
-    md5(
-        cast(provider_id as string) || '-' || 
-        cast(service_year as string) || '-' || 
-        cast(icd_code as string)  
-    ) as inpatient_id,
-    service_year,
+select 
     provider_id,
-    provider_name,
-    provider_state,
-    provider_type,
-    offers_emergency_services,
-    quality_rating,
-    chapter,
-    chapter_description,
-    code_category,
-    icd_code,  
-    diagnosis_description,
+    hospital_referral_region,
     total_discharges,
     average_covered_charges,
     average_total_payments,
     average_medicare_payments,
-    medicare_payment_ratio,
-    discharge_volume_category
-from combined_data
+    icd_category,
+    service_year
+from combined_inpatient

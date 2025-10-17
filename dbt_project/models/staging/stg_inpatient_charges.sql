@@ -7,7 +7,7 @@
 
 with inpatient_2011 as (
     select
-        trim(PROVIDER_ID) as provider_id,
+        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -25,7 +25,7 @@ with inpatient_2011 as (
 
 inpatient_2012 as (
     select
-        trim(PROVIDER_ID) as provider_id,
+        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -43,7 +43,7 @@ inpatient_2012 as (
 
 inpatient_2013 as (
     select
-        trim(PROVIDER_ID) as provider_id,
+        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -67,4 +67,18 @@ combined_inpatient as (
     select * from inpatient_2013
 )
 
-select * from combined_inpatient
+select 
+    provider_id,                   
+    provider_name,
+    provider_street_address,
+    provider_city,
+    provider_state,
+    provider_zipcode,
+    hospital_referral_region,
+    total_discharges,
+    average_covered_charges,
+    average_total_payments,
+    average_medicare_payments,
+    icd_category,
+    service_year
+from combined_inpatient
