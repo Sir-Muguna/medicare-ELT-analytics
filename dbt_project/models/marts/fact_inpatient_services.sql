@@ -5,44 +5,44 @@
     )
 }}
 
-with outpatient_base as (
+with inpatient_base as (
     select
         cast(service_year as integer) as service_year,
-        split_part(apc, ' - ', 1) as apc_code,
-        split_part(apc, ' - ', 2) as apc_description,
-        cast(provider_id as string) as provider_id,
-        cast(outpatient_services_count as integer) as service_volume,
-        cast(average_total_payments as numeric) as average_payment_amount,
-        cast(average_submitted_charges as numeric) as average_submitted_charge
-    from {{ ref('stg_outpatient_charges') }}
+        upper(cast(icd_category as string)) as diagnosis_code,
+        cast(cast(provider_id as integer) as string) as provider_id,
+        cast(total_discharges as integer) as total_discharges,
+        cast(average_covered_charges as numeric) as average_covered_charges,
+        cast(average_total_payments as numeric) as average_total_payments,
+        cast(average_medicare_payments as numeric) as average_medicare_payments
+    from {{ ref('stg_inpatient_charges') }}
     where provider_id is not null 
       and service_year is not null 
-      and apc is not null
+      and icd_category is not null
 ),
 
 final_fact_inpatient as (
     select
-        -- Surrogate Key
+        -- Surrogate Key for fact table
         md5(
-            cast(ob.provider_id as string) || '-' || 
-            cast(ob.service_year as string) || '-' || 
-            cast(ob.apc_code as string)
-        ) as outpatient_service_key,
+            cast(ib.provider_id as string) || '-' || 
+            cast(ib.service_year as string) || '-' || 
+            cast(ib.diagnosis_code as string)  
+        ) as inpatient_id,
         
-        -- Foreign Keys
-        ob.provider_id,
-        ob.service_year,
-        upper(trim(ob.apc_code)) as apc_code,
+        -- Foreign Keys to Dimensions
+        ib.provider_id,
+        ib.diagnosis_code,
+        ib.service_year,
         
-        -- Measures
-        ob.service_volume,
-        ob.average_payment_amount,
-        ob.average_submitted_charge,
+        -- Measures/Facts
+        ib.total_discharges,
+        ib.average_covered_charges,
+        ib.average_total_payments,
+        ib.average_medicare_payments,
         
-        -- Derived metrics
-        round(ob.average_payment_amount / nullif(ob.average_submitted_charge, 0), 4) as payment_to_charge_ratio
-    from outpatient_base ob
-    where ob.apc_code != '' 
+        -- Derived metrics (calculated facts)
+        round(ib.average_medicare_payments / nullif(ib.average_covered_charges, 0), 4) as medicare_payment_ratio
+    from inpatient_base ib
 )
 
 select * from final_fact_inpatient
