@@ -8,8 +8,7 @@
 with outpatient_base as (
     select
         cast(service_year as integer) as service_year,
-        split_part(apc, ' - ', 1) as apc_code,
-        split_part(apc, ' - ', 2) as apc_description,
+        apc_code,
         cast(provider_id as string) as provider_id,
         cast(outpatient_services_count as integer) as service_volume,
         cast(average_total_payments as numeric) as average_payment_amount,
@@ -17,7 +16,8 @@ with outpatient_base as (
     from {{ ref('stg_outpatient_charges') }}
     where provider_id is not null 
       and service_year is not null 
-      and apc is not null
+      and apc_code is not null
+      and apc_code != ''
 ),
 
 final_fact_outpatient as (
@@ -42,7 +42,6 @@ final_fact_outpatient as (
         -- Derived metrics
         round(ob.average_payment_amount / nullif(ob.average_submitted_charge, 0), 4) as payment_to_charge_ratio
     from outpatient_base ob
-    where ob.apc_code != '' 
 )
 
 select * from final_fact_outpatient

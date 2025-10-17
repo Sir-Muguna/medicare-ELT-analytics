@@ -264,8 +264,11 @@ models:
       - name: service_year
         description: "Year of service data (2011, 2012, or 2013)"
         
-      - name: apc
-        description: "Ambulatory Payment Classification code and description"
+      - name: apc_code
+        description: "Ambulatory Payment Classification code (e.g., '0207')"
+        
+      - name: apc_description
+        description: "APC service description (e.g., 'Level III Nerve Injections')"
         
       - name: provider_id
         description: "Unique hospital/provider identifier"

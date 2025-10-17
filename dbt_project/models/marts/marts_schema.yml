@@ -197,6 +197,44 @@ models:
         description: "Boolean indicating if this is a residual category"
         data_type: boolean
 
+  - name: dim_apc_codes
+    description: "Ambulatory Payment Classification codes reference table for outpatient procedure analysis"
+    config:
+      materialized: table
+      cluster_by: ['apc_code']
+    columns:
+      - name: apc_id
+        description: "Surrogate key for APC codes dimension"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
+      - name: apc_code
+        description: "Natural key - standardized APC procedure code"
+        data_type: string
+        tests:
+          - not_null
+          - unique
+          
+      - name: apc_description
+        description: "Description of the APC procedure/service"
+        data_type: string
+        tests:
+          - not_null
+          
+      - name: effective_date
+        description: "Date when this APC record became effective (SCD Type 2)"
+        data_type: timestamp
+        
+      - name: end_date
+        description: "Date when this APC record expired (SCD Type 2)"
+        data_type: timestamp
+        
+      - name: is_current_flag
+        description: "Boolean indicating if this is the current APC record (SCD Type 2)"
+        data_type: boolean
+
   - name: fact_outpatient_services
     description: "Outpatient service charge analysis at provider-APC level for trend analysis and service pattern identification"
     config:
@@ -223,7 +261,7 @@ models:
           - not_null
           
       - name: apc_code
-        description: "Ambulatory Payment Classification code in uppercase"
+        description: "Foreign key to APC codes dimension - Ambulatory Payment Classification code"
         data_type: string
         tests:
           - not_null
