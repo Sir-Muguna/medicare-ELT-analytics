@@ -83,17 +83,18 @@ The staging layer materializes as **Views** for efficiency, standardizing all co
 ---
 
 ## 🧠 Analytics Mart Layer (`HEALTHCARE_MARTS_DB.ANALYTICS`)
-The core of the platform: 6 production-optimized models built on **Dimensional Modeling** principles. All marts are materialized as **Tables** for sub-second query performance.
+The core of the platform: 7 production-optimized models built on **Dimensional Modeling** principles. All marts are materialized as **Tables** for sub-second query performance.
 
 ### **Dimensional Models (Reference)**
 1.  **`dim_providers`** 🧍: Single source of truth for all provider metadata, including geographic and quality metrics.
 2.  **`dim_diagnosis_codes`** 🧬: Integrated ICD-10 and ICD-11 codes with hierarchical categorization.
+3.  **`dim_apc_codes`** 🏥: Ambulatory Payment Classification codes reference table for outpatient procedure analysis.
 
 ### **Fact Models (Metrics & Events)**
-3.  **`fact_payment_analysis`** 💰: Unified fact table for cross-platform (inpatient/outpatient) Medicare payment comparisons and efficiency analysis.
-4.  **`fact_outpatient_services`** 🏥: Focuses on APC service charge trends, provider-level metrics, and service categorization.
-5.  **`fact_inpatient_services`** 🛌: Detailed discharge and payment analysis, enabling clinical prevalence trends by state.
-6.  **`fact_medicare_claims`** 💊: Aggregated prescription drug claims data for cost and therapeutic category analysis.
+4.  **`fact_payment_analysis`** 💰: Unified fact table for cross-platform (inpatient/outpatient) Medicare payment comparisons and efficiency analysis.
+5.  **`fact_outpatient_services`** 🏥: Focuses on APC service charge trends, provider-level metrics, and service categorization.
+6.  **`fact_inpatient_services`** 🛌: Detailed discharge and payment analysis, enabling clinical prevalence trends by state.
+7.  **`fact_medicare_claims`** 💊: Aggregated prescription drug claims data for cost and therapeutic category analysis.
 
 ![Snowflake MARTS Schema](/docs/snowflake_db_marts.png)
 
@@ -119,6 +120,7 @@ The final mart layer directly supports key business and clinical needs:
 | :--- | :--- | :--- |
 | **Provider Performance Benchmarking** | `fact_payment_analysis` + `dim_providers` | Rank providers on cost-efficiency and quality ratings. |
 | **Clinical Diagnosis Pattern Tracking** | `fact_inpatient_services` + `dim_diagnosis_codes` | Identify top ICD-11 diagnosis trends by region for resource planning. |
+| **Outpatient Procedure Analysis** | `fact_outpatient_services` + `dim_apc_codes` | Analyze APC procedure costs and service volumes across providers. |
 | **Geographic Affordability Analysis** | `dim_providers` | State-level comparison of charge vs. payment ratios. |
 | **Drug Utilization & Cost Forecasting** | `fact_medicare_claims` | Analyze therapeutic category spend and track multi-year trends. |
 
