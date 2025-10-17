@@ -20,7 +20,7 @@ with outpatient_base as (
       and apc is not null
 ),
 
-final_fact as (
+combined_outpatient as (
     select
         -- Surrogate Key
         md5(
@@ -45,4 +45,4 @@ final_fact as (
     where ob.apc_code != '' 
 )
 
-select * from final_fact
+select * from combined_outpatient
