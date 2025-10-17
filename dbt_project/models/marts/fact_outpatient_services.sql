@@ -11,8 +11,8 @@ with outpatient_base as (
         apc_code,
         cast(provider_id as string) as provider_id,
         cast(outpatient_services_count as integer) as service_volume,
-        cast(average_total_payments as numeric) as average_payment_amount,
-        cast(average_submitted_charges as numeric) as average_submitted_charge
+        round(cast(average_total_payments as numeric), 2) as average_payment_amount,
+        round(cast(average_submitted_charges as numeric), 2) as average_submitted_charge
     from {{ ref('stg_outpatient_charges') }}
     where provider_id is not null 
       and service_year is not null 
@@ -40,7 +40,7 @@ final_fact_outpatient as (
         ob.average_submitted_charge,
         
         -- Derived metrics
-        round(ob.average_payment_amount / nullif(ob.average_submitted_charge, 0), 4) as payment_to_charge_ratio
+        round(ob.average_payment_amount / nullif(ob.average_submitted_charge, 0), 2) as payment_to_charge_ratio
     from outpatient_base ob
 )
 
