@@ -9,7 +9,8 @@ with outpatient_2011 as (
     select
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
-        trim(APC) as apc,
+        split_part(trim(APC), ' - ', 1) as apc_code,
+        split_part(trim(APC), ' - ', 2) as apc_description,
         case 
             when try_cast(trim(PROVIDER_ID) as integer) is not null then 
                 cast(cast(trim(PROVIDER_ID) as integer) as string)
@@ -31,7 +32,8 @@ outpatient_2012 as (
     select
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
-        trim(APC) as apc,
+        split_part(trim(APC), ' - ', 1) as apc_code,
+        split_part(trim(APC), ' - ', 2) as apc_description,
         case 
             when try_cast(trim(PROVIDER_ID) as integer) is not null then 
                 cast(cast(trim(PROVIDER_ID) as integer) as string)
@@ -53,7 +55,8 @@ outpatient_2013 as (
     select
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
-        trim(APC) as apc,
+        split_part(trim(APC), ' - ', 1) as apc_code,
+        split_part(trim(APC), ' - ', 2) as apc_description,
         case 
             when try_cast(trim(PROVIDER_ID) as integer) is not null then 
                 cast(cast(trim(PROVIDER_ID) as integer) as string)
@@ -82,7 +85,8 @@ combined_outpatient as (
 select 
     _AIRBYTE_RAW_ID,
     _AIRBYTE_EXTRACTED_AT,
-    apc,
+    apc_code,
+    apc_description,
     provider_id,           
     provider_name,
     provider_street_address,
