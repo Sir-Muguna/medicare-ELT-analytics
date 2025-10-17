@@ -1,4 +1,3 @@
--- models/staging/stg_inpatient_charges.sql
 {{
     config(
         materialized='view'
@@ -7,7 +6,8 @@
 
 with inpatient_2011 as (
     select
-        cast(trim(PROVIDER_ID) as string) as provider_id,
+        -- Convert float to string and remove decimal part
+        cast(cast(PROVIDER_ID as integer) as string) as provider_id,
         trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
         
         -- Measures/Facts
@@ -26,7 +26,8 @@ with inpatient_2011 as (
 
 inpatient_2012 as (
     select
-        cast(trim(PROVIDER_ID) as string) as provider_id,
+        -- Convert float to string and remove decimal part
+        cast(cast(PROVIDER_ID as integer) as string) as provider_id,
         trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
         TOTAL_DISCHARGES as total_discharges,
         AVERAGE_COVERED_CHARGES as average_covered_charges,
@@ -39,7 +40,8 @@ inpatient_2012 as (
 
 inpatient_2013 as (
     select
-        cast(trim(PROVIDER_ID) as string) as provider_id,
+        -- Convert float to string and remove decimal part
+        cast(cast(PROVIDER_ID as integer) as string) as provider_id,
         trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
         TOTAL_DISCHARGES as total_discharges,
         AVERAGE_COVERED_CHARGES as average_covered_charges,

@@ -1,4 +1,3 @@
--- models/staging/stg_hospitals.sql
 {{
     config(
         materialized='view'
@@ -12,7 +11,12 @@ with hospital_info_raw_data as (
         _AIRBYTE_EXTRACTED_AT,
         
         -- Hospital Identification & Location
-        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
+        -- Handle both numeric and alphanumeric provider_ids (database-agnostic approach)
+        case 
+            when try_cast(trim(PROVIDER_ID) as integer) is not null then 
+                cast(cast(trim(PROVIDER_ID) as integer) as string)
+            else trim(PROVIDER_ID)
+        end as provider_id,
         trim(HOSPITAL_NAME) as hospital_name,
         trim(ADDRESS) as address,
         trim(CITY) as city,
@@ -80,7 +84,7 @@ with hospital_info_raw_data as (
 select 
     _AIRBYTE_RAW_ID,
     _AIRBYTE_EXTRACTED_AT,
-    provider_id,  -- Now consistently string type
+    provider_id, 
     hospital_name,
     address,
     city,

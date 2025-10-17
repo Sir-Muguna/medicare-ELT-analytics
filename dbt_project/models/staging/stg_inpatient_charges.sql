@@ -7,7 +7,11 @@
 
 with inpatient_2011 as (
     select
-        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
+        case 
+            when try_cast(trim(PROVIDER_ID) as integer) is not null then 
+                cast(cast(trim(PROVIDER_ID) as integer) as string)
+            else trim(PROVIDER_ID)
+        end as provider_id,
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -25,7 +29,11 @@ with inpatient_2011 as (
 
 inpatient_2012 as (
     select
-        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
+        case 
+            when try_cast(trim(PROVIDER_ID) as integer) is not null then 
+                cast(cast(trim(PROVIDER_ID) as integer) as string)
+            else trim(PROVIDER_ID)
+        end as provider_id,
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -43,7 +51,11 @@ inpatient_2012 as (
 
 inpatient_2013 as (
     select
-        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
+        case 
+            when try_cast(trim(PROVIDER_ID) as integer) is not null then 
+                cast(cast(trim(PROVIDER_ID) as integer) as string)
+            else trim(PROVIDER_ID)
+        end as provider_id,
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
