@@ -59,9 +59,9 @@ aggregated_payments as (
         service_year,
         care_setting,
         sum(service_volume) as service_volume,
-        avg(medicare_payment_amount) as medicare_payment_amount,
-        avg(total_payment_amount) as total_payment_amount,
-        avg(submitted_charges_amount) as submitted_charges_amount
+        round(avg(medicare_payment_amount), 2) as medicare_payment_amount,
+        round(avg(total_payment_amount), 2) as total_payment_amount,
+        round(avg(submitted_charges_amount), 2) as submitted_charges_amount
     from combined_payments
     group by provider_id, service_year, care_setting
 ),
@@ -75,7 +75,7 @@ payment_analysis as (
             care_setting
         ) as payment__id,
         
-        -- Foreign Keys (now properly formatted as string without decimals)
+        -- Foreign Keys
         provider_id,
         service_year,
         care_setting,
@@ -87,7 +87,7 @@ payment_analysis as (
         submitted_charges_amount,
         
         -- Derived metrics
-        round(medicare_payment_amount / nullif(submitted_charges_amount, 0), 4) as medicare_payment_ratio
+        round(medicare_payment_amount / nullif(submitted_charges_amount, 0), 2) as medicare_payment_ratio
     from aggregated_payments
 )
 

@@ -41,7 +41,7 @@ final_fact_inpatient as (
         ib.average_medicare_payments,
         
         -- Derived metrics (calculated facts)
-        round(ib.average_medicare_payments / nullif(ib.average_covered_charges, 0), 4) as medicare_payment_ratio
+        round(ib.average_medicare_payments / nullif(ib.average_covered_charges, 0), 2) as medicare_payment_ratio
     from inpatient_base ib
 )
 
