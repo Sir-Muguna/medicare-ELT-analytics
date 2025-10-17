@@ -1,72 +1,48 @@
 {{
     config(
-        materialized='table'
+        materialized='table',
+        cluster_by=['service_year', 'provider_id']
     )
 }}
 
-with inpatient_2011 as (
+with outpatient_base as (
     select
-        -- Convert float to string and remove decimal part
-        cast(cast(PROVIDER_ID as integer) as string) as provider_id,
-        upper(trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION)) as hospital_referral_region,
-        
-        -- Measures/Facts
-        TOTAL_DISCHARGES as total_discharges,
-        AVERAGE_COVERED_CHARGES as average_covered_charges,
-        AVERAGE_TOTAL_PAYMENTS as average_total_payments,
-        AVERAGE_MEDICARE_PAYMENTS as average_medicare_payments,
-        
-        -- Diagnosis dimension key
-        trim(ICD_CATEGORY) as icd_category,
-        
-        -- Time dimension
-        2011 as service_year
-    from {{ source('raw', 'inpatient_2011') }}
+        cast(service_year as integer) as service_year,
+        split_part(apc, ' - ', 1) as apc_code,
+        split_part(apc, ' - ', 2) as apc_description,
+        cast(provider_id as string) as provider_id,
+        cast(outpatient_services_count as integer) as service_volume,
+        cast(average_total_payments as numeric) as average_payment_amount,
+        cast(average_submitted_charges as numeric) as average_submitted_charge
+    from {{ ref('stg_outpatient_charges') }}
+    where provider_id is not null 
+      and service_year is not null 
+      and apc is not null
 ),
 
-inpatient_2012 as (
+final_fact_inpatient as (
     select
-        -- Convert float to string and remove decimal part
-        cast(cast(PROVIDER_ID as integer) as string) as provider_id,
-        upper(trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION)) as hospital_referral_region,
-        TOTAL_DISCHARGES as total_discharges,
-        AVERAGE_COVERED_CHARGES as average_covered_charges,
-        AVERAGE_TOTAL_PAYMENTS as average_total_payments,
-        AVERAGE_MEDICARE_PAYMENTS as average_medicare_payments,
-        trim(ICD_CATEGORY) as icd_category,
-        2012 as service_year
-    from {{ source('raw', 'inpatient_2012') }}
-),
-
-inpatient_2013 as (
-    select
-        -- Convert float to string and remove decimal part
-        cast(cast(PROVIDER_ID as integer) as string) as provider_id,
-        upper(trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION)) as hospital_referral_region,
-        TOTAL_DISCHARGES as total_discharges,
-        AVERAGE_COVERED_CHARGES as average_covered_charges,
-        AVERAGE_TOTAL_PAYMENTS as average_total_payments,
-        AVERAGE_MEDICARE_PAYMENTS as average_medicare_payments,
-        trim(ICD_CATEGORY) as icd_category,
-        2013 as service_year
-    from {{ source('raw', 'inpatient_2013') }}
-),
-
-combined_inpatient as (
-    select * from inpatient_2011
-    union all
-    select * from inpatient_2012
-    union all
-    select * from inpatient_2013
+        -- Surrogate Key
+        md5(
+            cast(ob.provider_id as string) || '-' || 
+            cast(ob.service_year as string) || '-' || 
+            cast(ob.apc_code as string)
+        ) as outpatient_service_key,
+        
+        -- Foreign Keys
+        ob.provider_id,
+        ob.service_year,
+        upper(trim(ob.apc_code)) as apc_code,
+        
+        -- Measures
+        ob.service_volume,
+        ob.average_payment_amount,
+        ob.average_submitted_charge,
+        
+        -- Derived metrics
+        round(ob.average_payment_amount / nullif(ob.average_submitted_charge, 0), 4) as payment_to_charge_ratio
+    from outpatient_base ob
+    where ob.apc_code != '' 
 )
 
-select 
-    provider_id,
-    hospital_referral_region,
-    total_discharges,
-    average_covered_charges,
-    average_total_payments,
-    average_medicare_payments,
-    icd_category,
-    service_year
-from combined_inpatient
+select * from final_fact_inpatient
