@@ -6,7 +6,8 @@
 
 with inpatient_payments as (
     select
-        cast(provider_id as string) as provider_id,
+        -- Convert float to string and remove decimal part
+        cast(cast(provider_id as integer) as string) as provider_id,
         cast(service_year as integer) as service_year,
         'inpatient' as care_setting,
         cast(total_discharges as integer) as service_volume,
@@ -18,7 +19,8 @@ with inpatient_payments as (
 
 outpatient_payments as (
     select
-        cast(provider_id as string) as provider_id,
+        -- Convert float to string and remove decimal part
+        cast(cast(provider_id as integer) as string) as provider_id,
         cast(service_year as integer) as service_year,
         'outpatient' as care_setting,
         cast(outpatient_services_count as integer) as service_volume,
@@ -64,16 +66,16 @@ aggregated_payments as (
     group by provider_id, service_year, care_setting
 ),
 
-final_fact as (
+payment_analysis as (
     select
-        -- FIXED: Ensure unique surrogate key at the correct grain
+        -- Ensure unique surrogate key at the correct grain
         md5(
-            cast(provider_id as string) || '-' || 
+            provider_id || '-' || 
             cast(service_year as string) || '-' || 
-            cast(care_setting as string)
+            care_setting
         ) as payment_analysis_key,
         
-        -- Foreign Keys
+        -- Foreign Keys (now properly formatted as string without decimals)
         provider_id,
         service_year,
         care_setting,
@@ -89,4 +91,4 @@ final_fact as (
     from aggregated_payments
 )
 
-select * from final_fact
+select * from payment_analysis

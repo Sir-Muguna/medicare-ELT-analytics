@@ -10,7 +10,11 @@ with outpatient_2011 as (
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
         trim(APC) as apc,
-        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
+        case 
+            when try_cast(trim(PROVIDER_ID) as integer) is not null then 
+                cast(cast(trim(PROVIDER_ID) as integer) as string)
+            else trim(PROVIDER_ID)
+        end as provider_id,
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -28,7 +32,11 @@ outpatient_2012 as (
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
         trim(APC) as apc,
-        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
+        case 
+            when try_cast(trim(PROVIDER_ID) as integer) is not null then 
+                cast(cast(trim(PROVIDER_ID) as integer) as string)
+            else trim(PROVIDER_ID)
+        end as provider_id,
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
@@ -46,7 +54,11 @@ outpatient_2013 as (
         _AIRBYTE_RAW_ID,
         _AIRBYTE_EXTRACTED_AT,
         trim(APC) as apc,
-        cast(trim(PROVIDER_ID) as string) as provider_id,  -- Cast to string
+        case 
+            when try_cast(trim(PROVIDER_ID) as integer) is not null then 
+                cast(cast(trim(PROVIDER_ID) as integer) as string)
+            else trim(PROVIDER_ID)
+        end as provider_id,
         trim(PROVIDER_NAME) as provider_name,
         trim(PROVIDER_STREET_ADDRESS) as provider_street_address,
         trim(PROVIDER_CITY) as provider_city,
