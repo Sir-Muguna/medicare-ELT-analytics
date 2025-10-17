@@ -9,7 +9,7 @@ with inpatient_payments as (
         -- Convert float to string and remove decimal part
         cast(cast(provider_id as integer) as string) as provider_id,
         cast(service_year as integer) as service_year,
-        'inpatient' as care_setting,
+        upper('inpatient') as care_setting,
         cast(total_discharges as integer) as service_volume,
         cast(average_medicare_payments as numeric) as medicare_payment_amount,
         cast(average_total_payments as numeric) as total_payment_amount,
@@ -22,7 +22,7 @@ outpatient_payments as (
         -- Convert float to string and remove decimal part
         cast(cast(provider_id as integer) as string) as provider_id,
         cast(service_year as integer) as service_year,
-        'outpatient' as care_setting,
+        upper('outpatient') as care_setting,
         cast(outpatient_services_count as integer) as service_volume,
         cast(average_total_payments as numeric) as medicare_payment_amount,
         cast(average_total_payments as numeric) as total_payment_amount,

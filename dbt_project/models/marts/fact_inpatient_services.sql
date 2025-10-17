@@ -8,7 +8,7 @@ with inpatient_2011 as (
     select
         -- Convert float to string and remove decimal part
         cast(cast(PROVIDER_ID as integer) as string) as provider_id,
-        trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
+        upper(trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION)) as hospital_referral_region,
         
         -- Measures/Facts
         TOTAL_DISCHARGES as total_discharges,
@@ -28,7 +28,7 @@ inpatient_2012 as (
     select
         -- Convert float to string and remove decimal part
         cast(cast(PROVIDER_ID as integer) as string) as provider_id,
-        trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
+        upper(trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION)) as hospital_referral_region,
         TOTAL_DISCHARGES as total_discharges,
         AVERAGE_COVERED_CHARGES as average_covered_charges,
         AVERAGE_TOTAL_PAYMENTS as average_total_payments,
@@ -42,7 +42,7 @@ inpatient_2013 as (
     select
         -- Convert float to string and remove decimal part
         cast(cast(PROVIDER_ID as integer) as string) as provider_id,
-        trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION) as hospital_referral_region,
+        upper(trim(HOSPITAL_REFERRAL_REGION_DESCRIPTION)) as hospital_referral_region,
         TOTAL_DISCHARGES as total_discharges,
         AVERAGE_COVERED_CHARGES as average_covered_charges,
         AVERAGE_TOTAL_PAYMENTS as average_total_payments,
