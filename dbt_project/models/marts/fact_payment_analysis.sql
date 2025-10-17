@@ -73,7 +73,7 @@ payment_analysis as (
             provider_id || '-' || 
             cast(service_year as string) || '-' || 
             care_setting
-        ) as payment_analysis_key,
+        ) as payment__id,
         
         -- Foreign Keys (now properly formatted as string without decimals)
         provider_id,

@@ -49,7 +49,7 @@ unified_codes as (
 final_diagnosis as (
     select
         -- Surrogate Key
-        md5(diagnosis_code || code_system) as diagnosis_key,
+        md5(diagnosis_code || code_system) as diagnosis_id,
         -- Natural Key
         diagnosis_code,
         code_system,

@@ -27,7 +27,7 @@ combined_outpatient as (
             cast(ob.provider_id as string) || '-' || 
             cast(ob.service_year as string) || '-' || 
             cast(ob.apc_code as string)
-        ) as outpatient_service_key,
+        ) as outpatient__id,
         
         -- Foreign Keys
         ob.provider_id,
